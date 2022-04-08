@@ -28,4 +28,6 @@
     <string name="password_invalid">Password character should be >6</string>
     <string name="sign_up">Sign Up</string>
     <string name="back">Back</string>
+    <string name="walk_human">walk human</string>
+    <string name="pass_the_credentials">Pass The Credentials</string>
 </resources>

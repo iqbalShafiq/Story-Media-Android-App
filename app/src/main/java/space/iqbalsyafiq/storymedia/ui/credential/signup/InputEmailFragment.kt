@@ -1,10 +1,10 @@
 package space.iqbalsyafiq.storymedia.ui.credential.signup
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import space.iqbalsyafiq.storymedia.databinding.FragmentInputEmailBinding
 
@@ -36,6 +36,12 @@ class InputEmailFragment : Fragment() {
                         Navigation.findNavController(binding.root).navigate(action)
                     } else etEmail.onEmailInvalid()
                 } else etEmail.onFormEmpty()
+            }
+
+            // Sign in on click
+            tvSignIn.setOnClickListener {
+                val action = InputEmailFragmentDirections.navigateToLoginFragment()
+                Navigation.findNavController(binding.root).navigate(action)
             }
         }
     }

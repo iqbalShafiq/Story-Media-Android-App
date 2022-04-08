@@ -1,5 +1,6 @@
 package space.iqbalsyafiq.storymedia.ui.credential.signup
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.navigation.fragment.navArgs
 import space.iqbalsyafiq.storymedia.databinding.FragmentSubmitSignUpBinding
 import space.iqbalsyafiq.storymedia.model.request.RegisterRequest
 import space.iqbalsyafiq.storymedia.ui.credential.CredentialViewModel
+import space.iqbalsyafiq.storymedia.ui.story.StoryActivity
 
 class SubmitSignUpFragment : Fragment() {
 
@@ -53,7 +55,6 @@ class SubmitSignUpFragment : Fragment() {
                 if (etEmail.isNotEmpty) {
                     if (etEmail.isEmailValid) {
                         /** @TODO
-                         * check to API for duplicate validation
                          * intent to dashboard after registration success
                          */
                         viewModel.registerUser(
@@ -66,6 +67,9 @@ class SubmitSignUpFragment : Fragment() {
                     } else etEmail.onEmailInvalid()
                 } else etEmail.onFormEmpty()
             }
+
+            // on back pressed
+            tvBack.setOnClickListener { requireActivity().onBackPressed() }
         }
 
         observeLiveData()
@@ -83,11 +87,17 @@ class SubmitSignUpFragment : Fragment() {
         viewModel.registerUserStatus.observe(viewLifecycleOwner) { status ->
             status?.let {
                 if (it) {
+                    // show toast
                     Toast.makeText(
                         requireContext(),
                         "Registration Success!",
                         Toast.LENGTH_SHORT
                     ).show()
+
+                    // intent to dashboard
+                    Intent(requireActivity(), StoryActivity::class.java).apply {
+                        requireContext().startActivity(this)
+                    }.also { requireActivity().finish() }
                 } else {
                     Toast.makeText(
                         requireContext(),

@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
                 delay(3000)
                 Intent(this@MainActivity, CredentialActivity::class.java).apply {
                     startActivity(this)
-                }
+                }.also { finish() }
             }
         }
     }
