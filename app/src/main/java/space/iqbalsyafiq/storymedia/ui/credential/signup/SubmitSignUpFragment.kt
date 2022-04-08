@@ -106,7 +106,7 @@ class SubmitSignUpFragment : Fragment() {
                     // show toast
                     Toast.makeText(
                         requireContext(),
-                        "Registration Success!",
+                        "Login Success!",
                         Toast.LENGTH_SHORT
                     ).show()
 
@@ -117,7 +117,7 @@ class SubmitSignUpFragment : Fragment() {
                 } else {
                     Toast.makeText(
                         requireContext(),
-                        "Registration Gagal!",
+                        "Login Gagal!",
                         Toast.LENGTH_SHORT
                     ).show()
                 }

@@ -3,23 +3,26 @@ package space.iqbalsyafiq.storymedia.repository
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class TokenPreferences private constructor(private val dataStore: DataStore<Preferences>) {
 
-    private val loginToken = stringPreferencesKey("login_token_setting")
-
-    fun getLoginToken(): Flow<String> {
+    fun loadPreference(key: Preferences.Key<String>): Flow<String> {
         return dataStore.data.map { preferences ->
-            preferences[loginToken] ?: ""
+            preferences[key] ?: ""
         }
     }
 
-    suspend fun saveThemeSetting(token: String) {
+    suspend fun savePreference(token: String, key: Preferences.Key<String>) {
         dataStore.edit { preferences ->
-            preferences[loginToken] = token
+            preferences[key] = token
+        }
+    }
+
+    suspend fun clearPreference(key: Preferences.Key<String>) {
+        dataStore.edit { preferences ->
+            preferences[key] = ""
         }
     }
 

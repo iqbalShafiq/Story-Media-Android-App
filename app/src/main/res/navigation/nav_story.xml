@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_story"
+    app:startDestination="@id/listStoryFragment">
+
+    <fragment
+        android:id="@+id/listStoryFragment"
+        android:name="space.iqbalsyafiq.storymedia.ui.story.ListStoryFragment"
+        android:label="fragment_list_story"
+        tools:layout="@layout/fragment_list_story">
+        <action
+            android:id="@+id/navigateToCreateStory"
+            app:destination="@id/createStoryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createStoryFragment"
+        android:name="space.iqbalsyafiq.storymedia.ui.story.CreateStoryFragment"
+        android:label="fragment_create_story"
+        tools:layout="@layout/fragment_create_story" />
+</navigation>

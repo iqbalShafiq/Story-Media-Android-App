@@ -30,4 +30,7 @@
     <string name="back">Back</string>
     <string name="walk_human">walk human</string>
     <string name="pass_the_credentials">Pass The Credentials</string>
+    <string name="wellcome_user">Wellcome %1s</string>
+    <string name="log_out">log out</string>
+    <string name="story_list">Story List</string>
 </resources>

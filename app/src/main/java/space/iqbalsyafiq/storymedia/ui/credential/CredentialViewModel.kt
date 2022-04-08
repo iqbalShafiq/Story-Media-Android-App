@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -15,6 +16,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import space.iqbalsyafiq.storymedia.model.DataResponse
+import space.iqbalsyafiq.storymedia.model.LoginResult
 import space.iqbalsyafiq.storymedia.model.request.LoginRequest
 import space.iqbalsyafiq.storymedia.model.request.RegisterRequest
 import space.iqbalsyafiq.storymedia.repository.TokenPreferences
@@ -23,6 +25,8 @@ import space.iqbalsyafiq.storymedia.repository.api.ApiConfig
 class CredentialViewModel(application: Application) : AndroidViewModel(application) {
 
     // init data store
+    private val loginTokenKey = stringPreferencesKey("login_token")
+    private val nameKey = stringPreferencesKey("name")
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
         name = "login_token_setting"
     )
@@ -43,6 +47,9 @@ class CredentialViewModel(application: Application) : AndroidViewModel(applicati
 
     private var _loginUserStatus = MutableLiveData<Boolean>()
     val loginUserStatus: LiveData<Boolean> = _loginUserStatus
+
+    private var _loginUserResult = MutableLiveData<LoginResult>()
+    val loginUserResult: LiveData<LoginResult> = _loginUserResult
 
     fun registerUser(requestBody: RegisterRequest) {
         _loadingState.value = true
@@ -84,8 +91,18 @@ class CredentialViewModel(application: Application) : AndroidViewModel(applicati
                 when {
                     response.isSuccessful -> {
                         _loginUserStatus.value = true
+                        response.body()?.loginResult?.let {
+                            _loginUserResult.value = it
+                        }
                         viewModelScope.launch {
-                            pref.saveThemeSetting(response.body()?.loginResult?.token ?: "")
+                            pref.savePreference(
+                                response.body()?.loginResult?.token ?: "",
+                                loginTokenKey
+                            )
+                            pref.savePreference(
+                                response.body()?.loginResult?.name ?: "",
+                                nameKey
+                            )
                         }
                     }
                     else -> {
@@ -100,10 +117,6 @@ class CredentialViewModel(application: Application) : AndroidViewModel(applicati
                 _loginUserStatus.value = false
             }
         })
-    }
-
-    private fun saveToken() {
-
     }
 
     companion object {
