@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
 import space.iqbalsyafiq.storymedia.databinding.FragmentSubmitSignUpBinding
+import space.iqbalsyafiq.storymedia.model.request.RegisterRequest
 import space.iqbalsyafiq.storymedia.ui.credential.CredentialViewModel
 
 class SubmitSignUpFragment : Fragment() {
@@ -55,14 +56,51 @@ class SubmitSignUpFragment : Fragment() {
                          * check to API for duplicate validation
                          * intent to dashboard after registration success
                          */
-
-                        Toast.makeText(
-                            requireContext(),
-                            "Registration Success!",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        viewModel.registerUser(
+                            RegisterRequest(
+                                etFullName.text.toString(),
+                                etEmail.text.toString(),
+                                etPassword.text.toString()
+                            )
+                        )
                     } else etEmail.onEmailInvalid()
                 } else etEmail.onFormEmpty()
+            }
+        }
+
+        observeLiveData()
+    }
+
+    private fun observeLiveData() {
+        viewModel.loadingState.observe(viewLifecycleOwner) { isLoading ->
+            isLoading?.let {
+                binding.progressLoading.visibility = if (it) View.VISIBLE else View.GONE
+                binding.btnSignUp.visibility = if (it) View.GONE else View.VISIBLE
+                binding.tvBack.visibility = if (it) View.GONE else View.VISIBLE
+            }
+        }
+
+        viewModel.registerUserStatus.observe(viewLifecycleOwner) { status ->
+            status?.let {
+                if (it) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Registration Success!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Registration Gagal!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+
+        viewModel.duplicateEmailStatus.observe(viewLifecycleOwner) { isDuplicate ->
+            isDuplicate?.let {
+                if (isDuplicate) binding.etEmail.onEmailDuplicate()
             }
         }
     }

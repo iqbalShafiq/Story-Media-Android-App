@@ -101,6 +101,6 @@
         android:gravity="center"
         style="@style/SemiBold18Sp"
         android:textColor="@color/light_primary"
-        android:text="@string/back" />
+        android:text="@string/sign_in" />
 
 </androidx.constraintlayout.motion.widget.MotionLayout>

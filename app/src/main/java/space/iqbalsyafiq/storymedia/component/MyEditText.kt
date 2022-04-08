@@ -69,6 +69,12 @@ class MyEditText : AppCompatEditText {
                             R.color.dark_accent
                         )
                     )
+
+                    // check is not email and password
+                    if (
+                        this@MyEditText.inputType != PASSWORD &&
+                        this@MyEditText.inputType != EMAIL
+                    ) showPassIcon()
                 }
 
                 // show warning and pass icon by type

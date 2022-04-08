@@ -12,22 +12,44 @@ import space.iqbalsyafiq.storymedia.model.DataResponse
 import space.iqbalsyafiq.storymedia.model.request.RegisterRequest
 import space.iqbalsyafiq.storymedia.repository.api.ApiConfig
 
-class CredentialViewModel(application: Application): AndroidViewModel(application) {
+class CredentialViewModel(application: Application) : AndroidViewModel(application) {
     private val service = ApiConfig.getApiService()
 
     // live data
-    private var _registerUser = MutableLiveData<Boolean>()
-    val registerUser: LiveData<Boolean> = _registerUser
+    private var _loadingState = MutableLiveData<Boolean>()
+    val loadingState: LiveData<Boolean> = _loadingState
+
+    private var _registerUserStatus = MutableLiveData<Boolean>()
+    val registerUserStatus: LiveData<Boolean> = _registerUserStatus
+
+    private var _duplicateEmailStatus = MutableLiveData<Boolean>()
+    val duplicateEmailStatus: LiveData<Boolean> = _duplicateEmailStatus
 
     fun registerUser(requestBody: RegisterRequest) {
-        service.registerUser(requestBody).enqueue(object: Callback<DataResponse> {
+        _loadingState.value = true
+
+        service.registerUser(requestBody).enqueue(object : Callback<DataResponse> {
             override fun onResponse(call: Call<DataResponse>, response: Response<DataResponse>) {
-                _registerUser.value = response.isSuccessful
+                Log.d(TAG, "onResponse: ${response.code()}")
+
+                _loadingState.value = false
+                when {
+                    response.isSuccessful -> {
+                        _registerUserStatus.value = true
+                    }
+                    response.code() == 400 -> {
+                        _duplicateEmailStatus.value = true
+                    }
+                    else -> {
+                        _registerUserStatus.value = false
+                    }
+                }
             }
 
             override fun onFailure(call: Call<DataResponse>, t: Throwable) {
-                Log.d(TAG, "onFailure: ${t.message}")
-                _registerUser.value = false
+                Log.e(TAG, "onFailure: ${t.message}")
+                _loadingState.value = false
+                _registerUserStatus.value = false
             }
         })
     }
