@@ -2,13 +2,12 @@ package space.iqbalsyafiq.storymedia.repository
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class SettingPreferences private constructor(private val dataStore: DataStore<Preferences>) {
+class TokenPreferences private constructor(private val dataStore: DataStore<Preferences>) {
 
     private val loginToken = stringPreferencesKey("login_token_setting")
 
@@ -26,11 +25,11 @@ class SettingPreferences private constructor(private val dataStore: DataStore<Pr
 
     companion object {
         @Volatile
-        private var INSTANCE: SettingPreferences? = null
+        private var INSTANCE: TokenPreferences? = null
 
-        fun getInstance(dataStore: DataStore<Preferences>): SettingPreferences {
+        fun getInstance(dataStore: DataStore<Preferences>): TokenPreferences {
             return INSTANCE ?: synchronized(this) {
-                val instance = SettingPreferences(dataStore)
+                val instance = TokenPreferences(dataStore)
                 INSTANCE = instance
                 instance
             }

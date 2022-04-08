@@ -90,6 +90,25 @@ class SubmitSignUpFragment : Fragment() {
                         "Registration Success!",
                         Toast.LENGTH_SHORT
                     ).show()
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Registration Gagal!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+
+        viewModel.loginUserStatus.observe(viewLifecycleOwner) { status ->
+            status?.let {
+                if (it) {
+                    // show toast
+                    Toast.makeText(
+                        requireContext(),
+                        "Registration Success!",
+                        Toast.LENGTH_SHORT
+                    ).show()
 
                     // intent to dashboard
                     Intent(requireActivity(), StoryActivity::class.java).apply {

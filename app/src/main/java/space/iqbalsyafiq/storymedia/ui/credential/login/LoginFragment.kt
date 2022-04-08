@@ -1,5 +1,6 @@
 package space.iqbalsyafiq.storymedia.ui.credential.login
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import androidx.fragment.app.activityViewModels
 import space.iqbalsyafiq.storymedia.databinding.FragmentLoginBinding
 import space.iqbalsyafiq.storymedia.model.request.LoginRequest
 import space.iqbalsyafiq.storymedia.ui.credential.CredentialViewModel
+import space.iqbalsyafiq.storymedia.ui.story.StoryActivity
 
 class LoginFragment : Fragment() {
 
@@ -80,9 +82,9 @@ class LoginFragment : Fragment() {
                     ).show()
 
                     // intent to dashboard
-//                    Intent(requireActivity(), StoryActivity::class.java).apply {
-//                        requireContext().startActivity(this)
-//                    }.also { requireActivity().finish() }
+                    Intent(requireActivity(), StoryActivity::class.java).apply {
+                        requireContext().startActivity(this)
+                    }.also { requireActivity().finish() }
                 } else {
                     Toast.makeText(
                         requireContext(),

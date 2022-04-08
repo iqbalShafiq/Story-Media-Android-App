@@ -1,19 +1,34 @@
 package space.iqbalsyafiq.storymedia.ui.credential
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import space.iqbalsyafiq.storymedia.model.DataResponse
 import space.iqbalsyafiq.storymedia.model.request.LoginRequest
 import space.iqbalsyafiq.storymedia.model.request.RegisterRequest
+import space.iqbalsyafiq.storymedia.repository.TokenPreferences
 import space.iqbalsyafiq.storymedia.repository.api.ApiConfig
 
 class CredentialViewModel(application: Application) : AndroidViewModel(application) {
+
+    // init data store
+    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
+        name = "login_token_setting"
+    )
+    private val pref = TokenPreferences.getInstance(application.dataStore)
+
+    // init api
     private val service = ApiConfig.getApiService()
 
     // live data
@@ -36,10 +51,10 @@ class CredentialViewModel(application: Application) : AndroidViewModel(applicati
             override fun onResponse(call: Call<DataResponse>, response: Response<DataResponse>) {
                 Log.d(TAG, "onResponse: ${response.code()}")
 
-                _loadingState.value = false
                 when {
                     response.isSuccessful -> {
                         _registerUserStatus.value = true
+                        loginUser(LoginRequest(requestBody.email, requestBody.password))
                     }
                     response.code() == 400 -> {
                         _duplicateEmailStatus.value = true
@@ -63,12 +78,15 @@ class CredentialViewModel(application: Application) : AndroidViewModel(applicati
 
         service.loginUser(requestBody).enqueue(object : Callback<DataResponse> {
             override fun onResponse(call: Call<DataResponse>, response: Response<DataResponse>) {
-                Log.d(TAG, "onResponse: ${response.code()}")
+                Log.d(TAG, "onResponse: ${response.body()?.loginResult?.token}")
 
                 _loadingState.value = false
                 when {
                     response.isSuccessful -> {
                         _loginUserStatus.value = true
+                        viewModelScope.launch {
+                            pref.saveThemeSetting(response.body()?.loginResult?.token ?: "")
+                        }
                     }
                     else -> {
                         _loginUserStatus.value = false
@@ -82,6 +100,10 @@ class CredentialViewModel(application: Application) : AndroidViewModel(applicati
                 _loginUserStatus.value = false
             }
         })
+    }
+
+    private fun saveToken() {
+
     }
 
     companion object {
