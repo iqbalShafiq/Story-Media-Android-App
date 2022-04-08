@@ -7,8 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.Navigation
 import space.iqbalsyafiq.storymedia.R
 import space.iqbalsyafiq.storymedia.databinding.FragmentListStoryBinding
+import space.iqbalsyafiq.storymedia.model.Story
 import space.iqbalsyafiq.storymedia.ui.MainActivity
 
 class ListStoryFragment : Fragment() {
@@ -16,6 +18,8 @@ class ListStoryFragment : Fragment() {
     private val viewModel: StoryViewModel by activityViewModels()
     private var _binding: FragmentListStoryBinding? = null
     private val binding get() = _binding!!
+    private lateinit var adapter: ListStoryAdapter
+    private var userToken: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,6 +34,11 @@ class ListStoryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         with(binding) {
+            swipeRefresh.setOnRefreshListener {
+                viewModel.getListStory(userToken)
+                swipeRefresh.isRefreshing = false
+            }
+
             btnLogout.setOnClickListener {
                 viewModel.clearToken()
             }
@@ -39,6 +48,15 @@ class ListStoryFragment : Fragment() {
     }
 
     private fun observeLiveData() {
+        viewModel.loadingState.observe(viewLifecycleOwner) { isLoading ->
+            isLoading?.let {
+                with(binding) {
+                    progressLoading.visibility = if (it) View.VISIBLE else View.GONE
+                    rvListStory.visibility = if (it) View.GONE else View.VISIBLE
+                }
+            }
+        }
+
         viewModel.onCleared.observe(viewLifecycleOwner) { isCleared ->
             isCleared?.let {
                 Intent(requireActivity(), MainActivity::class.java).apply {
@@ -58,8 +76,21 @@ class ListStoryFragment : Fragment() {
 
         viewModel.getToken().observe(viewLifecycleOwner) { token ->
             token?.let {
-                viewModel.getListStory(token)
+                userToken = token
+                viewModel.getListStory(userToken)
             }
         }
+
+        viewModel.listStory.observe(viewLifecycleOwner) { stories ->
+            stories?.let {
+                adapter = ListStoryAdapter(this, it)
+                binding.rvListStory.adapter = adapter
+            }
+        }
+    }
+
+    fun goToDetail(story: Story) {
+        val action = ListStoryFragmentDirections.navigateToCreateStory(story)
+        Navigation.findNavController(binding.root).navigate(action)
     }
 }

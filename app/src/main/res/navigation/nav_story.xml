@@ -18,5 +18,9 @@
         android:id="@+id/createStoryFragment"
         android:name="space.iqbalsyafiq.storymedia.ui.story.CreateStoryFragment"
         android:label="fragment_create_story"
-        tools:layout="@layout/fragment_create_story" />
+        tools:layout="@layout/fragment_create_story">
+        <argument
+            android:name="storyDetail"
+            app:argType="space.iqbalsyafiq.storymedia.model.Story" />
+    </fragment>
 </navigation>

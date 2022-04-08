@@ -3,6 +3,7 @@ package space.iqbalsyafiq.storymedia.ui.story
 import android.app.Application
 import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -13,6 +14,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import space.iqbalsyafiq.storymedia.model.DataResponse
+import space.iqbalsyafiq.storymedia.model.Story
 import space.iqbalsyafiq.storymedia.repository.TokenPreferences
 import space.iqbalsyafiq.storymedia.repository.api.ApiConfig
 
@@ -29,8 +31,14 @@ class StoryViewModel(application: Application) : AndroidViewModel(application) {
     private val service = ApiConfig.getApiService()
 
     // live data
+    private var _loadingState = MutableLiveData<Boolean>()
+    val loadingState: LiveData<Boolean> = _loadingState
+
     private var _onCleared = MutableLiveData<Boolean>()
     val onCleared: LiveData<Boolean> = _onCleared
+
+    private var _listStory = MutableLiveData<List<Story>>()
+    val listStory: LiveData<List<Story>> = _listStory
 
     // get token
     @JvmName("getToken1")
@@ -54,20 +62,28 @@ class StoryViewModel(application: Application) : AndroidViewModel(application) {
 
     // get list story
     fun getListStory(token: String) {
-        Log.d(TAG, "getListStory: Hello")
-        Log.d(TAG, "getListStory: $token")
+        _loadingState.value = true
+
         service.getAllStories(
             "Bearer $token"
         ).enqueue(object : Callback<DataResponse> {
             override fun onResponse(call: Call<DataResponse>, response: Response<DataResponse>) {
-                Log.d(TAG, "getListStory onResponse: $response")
+                _loadingState.value = false
+
                 if (response.isSuccessful) {
                     Log.d(TAG, "getListStory onResponse: ${response.body()?.listStory}")
+                    response.body()?.listStory?.let {
+                        _listStory.value = it
+                    }
+                } else {
+                    Toast.makeText(getApplication(), "Please try again", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<DataResponse>, t: Throwable) {
                 Log.d(TAG, "getListStory onFailure: ${t.message}")
+                _loadingState.value = false
+                Toast.makeText(getApplication(), "Please try again", Toast.LENGTH_SHORT).show()
             }
         })
     }

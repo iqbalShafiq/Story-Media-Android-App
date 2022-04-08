@@ -49,7 +49,17 @@ class MyEditText : AppCompatEditText {
         initStartIcon()
 
         addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun beforeTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                // set tint on text changed
+                if (text?.isNotEmpty() as Boolean) {
+                    startIcon.setTint(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.dark_accent
+                        )
+                    )
+                }
+            }
 
             override fun onTextChanged(text: CharSequence?, p1: Int, p2: Int, count: Int) {
                 // set tint on text changed
@@ -74,7 +84,9 @@ class MyEditText : AppCompatEditText {
                     if (
                         this@MyEditText.inputType != PASSWORD &&
                         this@MyEditText.inputType != EMAIL
-                    ) showPassIcon()
+                    ) {
+                        if (this@MyEditText.isEnabled) showPassIcon()
+                    }
                 }
 
                 // show warning and pass icon by type
