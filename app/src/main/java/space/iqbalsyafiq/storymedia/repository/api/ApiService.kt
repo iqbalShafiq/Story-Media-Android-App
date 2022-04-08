@@ -18,8 +18,8 @@ interface ApiService {
     ): Call<DataResponse>
 
     @GET("stories")
-    @Headers("Authorization: Bearer ${ApiConstant.API_TOKEN}") // @TODO API TOKEN
     fun getAllStories(
+        @Header("Authorization") authKey: String,
         @Query("page") page: Int? = 1,
         @Query("size") size: Int? = 10
     ): Call<DataResponse>

@@ -16,7 +16,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import space.iqbalsyafiq.storymedia.model.DataResponse
-import space.iqbalsyafiq.storymedia.model.LoginResult
 import space.iqbalsyafiq.storymedia.model.request.LoginRequest
 import space.iqbalsyafiq.storymedia.model.request.RegisterRequest
 import space.iqbalsyafiq.storymedia.repository.TokenPreferences
@@ -47,9 +46,6 @@ class CredentialViewModel(application: Application) : AndroidViewModel(applicati
 
     private var _loginUserStatus = MutableLiveData<Boolean>()
     val loginUserStatus: LiveData<Boolean> = _loginUserStatus
-
-    private var _loginUserResult = MutableLiveData<LoginResult>()
-    val loginUserResult: LiveData<LoginResult> = _loginUserResult
 
     fun registerUser(requestBody: RegisterRequest) {
         _loadingState.value = true
@@ -91,9 +87,6 @@ class CredentialViewModel(application: Application) : AndroidViewModel(applicati
                 when {
                     response.isSuccessful -> {
                         _loginUserStatus.value = true
-                        response.body()?.loginResult?.let {
-                            _loginUserResult.value = it
-                        }
                         viewModelScope.launch {
                             pref.savePreference(
                                 response.body()?.loginResult?.token ?: "",

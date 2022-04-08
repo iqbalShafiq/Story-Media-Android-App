@@ -55,5 +55,11 @@ class ListStoryFragment : Fragment() {
                 )
             }
         }
+
+        viewModel.getToken().observe(viewLifecycleOwner) { token ->
+            token?.let {
+                viewModel.getListStory(token)
+            }
+        }
     }
 }
