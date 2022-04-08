@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/green_accent"
+    app:layoutDescription="@xml/fragment_input_email_scene"
+    tools:context=".ui.credential.signup.InputEmailFragment">
+
+    <ImageView
+        android:id="@+id/ivHumanWalk"
+        android:layout_width="180dp"
+        android:layout_height="199dp"
+        android:layout_marginTop="55dp"
+        android:contentDescription="@string/sit_down_human"
+        android:src="@drawable/ic_human_sitdown"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvJoinUs"
+        style="@style/SemiBold36Sp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:gravity="center"
+        android:text="@string/let_s_join_us"
+        android:textColor="@color/light_primary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivHumanWalk" />
+
+    <TextView
+        android:id="@+id/tvDescJoin"
+        style="@style/Medium18Sp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:text="@string/we_provide_you_with_the_best_way_to_share_your_story_with_your_social_friends"
+        android:textColor="@color/light_primary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvJoinUs" />
+
+    <TextView
+        android:id="@+id/tvLabelEmail"
+        style="@style/Medium14Sp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/email"
+        android:labelFor="@id/etEmail"
+        android:textColor="@color/light_primary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvDescJoin" />
+
+    <space.iqbalsyafiq.storymedia.component.MyEditText
+        android:id="@+id/etEmail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginTop="7dp"
+        android:hint="@string/input_your_email_here"
+        android:inputType="textEmailAddress"
+        android:paddingVertical="16dp"
+        android:paddingHorizontal="20dp"
+        style="@style/Medium14Sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvLabelEmail" />
+
+    <Button
+        android:id="@+id/btnJoinNow"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        app:layout_constraintTop_toBottomOf="@id/etEmail"
+        app:layout_constraintStart_toStartOf="@id/etEmail"
+        app:layout_constraintEnd_toEndOf="@id/etEmail"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bg_radius_8dp_stroke"
+        android:text="@string/join_now"
+        style="@style/SemiBold18Sp"
+        android:textAllCaps="false"
+        android:textColor="@color/light_primary" />
+
+    <TextView
+        android:id="@+id/tvSignIn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/btnJoinNow"
+        app:layout_constraintEnd_toEndOf="@id/btnJoinNow"
+        app:layout_constraintTop_toBottomOf="@id/btnJoinNow"
+        android:paddingVertical="12dp"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        style="@style/SemiBold18Sp"
+        android:textColor="@color/light_primary"
+        android:text="@string/back" />
+
+</androidx.constraintlayout.motion.widget.MotionLayout>

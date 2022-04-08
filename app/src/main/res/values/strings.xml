@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">Story Media</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="sit_down_human">sit down human</string>
+    <string name="let_s_join_us">Let\'s Join Us</string>
+    <string name="we_provide_you_with_the_best_way_to_share_your_story_with_your_social_friends">We provide you with the best way to share your story with your social friends</string>
+
+    <!-- Edit Text Place Holder -->
+    <string name="input_your_password_here">Input your password here …</string>
+    <string name="input_your_password_again_here">Input your password again here …</string>
+    <string name="input_your_email_here">Input your email here …</string>
+    <string name="input_the_description_here">Input the description here …</string>
+    <string name="input_your_name_here">Input your name here …</string>
+    <string name="story_app_logo">Story App Logo</string>
+    <string name="story_media">Story Media</string>
+
+    <!-- Other -->
+    <string name="email">Email</string>
+    <string name="join_now">Join Now</string>
+    <string name="sign_in">Sign In</string>
+    <string name="form_could_not_be_empty">%1s form could not be empty</string>
+    <string name="email_not_valid">Email not valid</string>
+    <string name="email_duplicate">Please use other email</string>
+    <string name="let_s_complete_the_form">Let\'s Complete The Form</string>
+    <string name="full_name">Full Name</string>
+    <string name="password">Password</string>
+    <string name="password_confirmation">Password Confirmation</string>
+    <string name="password_invalid">Password character should be >6</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="back">Back</string>
+</resources>
