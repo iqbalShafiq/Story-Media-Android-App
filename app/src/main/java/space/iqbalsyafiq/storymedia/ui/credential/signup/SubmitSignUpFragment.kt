@@ -6,12 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
 import space.iqbalsyafiq.storymedia.databinding.FragmentSubmitSignUpBinding
+import space.iqbalsyafiq.storymedia.ui.credential.CredentialViewModel
 
 class SubmitSignUpFragment : Fragment() {
 
     private val args: SubmitSignUpFragmentArgs by navArgs()
+    private val viewModel: CredentialViewModel by activityViewModels()
     private var _binding: FragmentSubmitSignUpBinding? = null
     private val binding get() = _binding!!
 
@@ -52,6 +55,7 @@ class SubmitSignUpFragment : Fragment() {
                          * check to API for duplicate validation
                          * intent to dashboard after registration success
                          */
+
                         Toast.makeText(
                             requireContext(),
                             "Registration Success!",
