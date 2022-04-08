@@ -1,9 +1,11 @@
 package space.iqbalsyafiq.storymedia.ui.credential.login
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import space.iqbalsyafiq.storymedia.databinding.FragmentLoginBinding
@@ -58,6 +60,41 @@ class LoginFragment : Fragment() {
     }
 
     private fun observeLiveData() {
+        viewModel.loadingState.observe(viewLifecycleOwner) { isLoading ->
+            isLoading?.let {
+                Log.d(TAG, "observeLiveData: $it")
+                binding.progressLoading.visibility = if (it) View.VISIBLE else View.GONE
+                binding.btnSignIn.visibility = if (it) View.GONE else View.VISIBLE
+                binding.tvBack.visibility = if (it) View.GONE else View.VISIBLE
+            }
+        }
 
+        viewModel.loginUserStatus.observe(viewLifecycleOwner) { status ->
+            status?.let {
+                if (it) {
+                    // show toast
+                    Toast.makeText(
+                        requireContext(),
+                        "Login Success!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    // intent to dashboard
+//                    Intent(requireActivity(), StoryActivity::class.java).apply {
+//                        requireContext().startActivity(this)
+//                    }.also { requireActivity().finish() }
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Invalid Credentials!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+    }
+
+    companion object {
+        private val TAG = LoginFragment::class.java.simpleName
     }
 }

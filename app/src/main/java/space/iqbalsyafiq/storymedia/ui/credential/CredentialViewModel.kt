@@ -59,6 +59,8 @@ class CredentialViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     fun loginUser(requestBody: LoginRequest) {
+        _loadingState.value = true
+
         service.loginUser(requestBody).enqueue(object : Callback<DataResponse> {
             override fun onResponse(call: Call<DataResponse>, response: Response<DataResponse>) {
                 Log.d(TAG, "onResponse: ${response.code()}")
