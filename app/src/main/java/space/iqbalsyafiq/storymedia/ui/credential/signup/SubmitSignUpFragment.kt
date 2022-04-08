@@ -54,9 +54,6 @@ class SubmitSignUpFragment : Fragment() {
                 // checking email and full name
                 if (etEmail.isNotEmpty) {
                     if (etEmail.isEmailValid) {
-                        /** @TODO
-                         * intent to dashboard after registration success
-                         */
                         viewModel.registerUser(
                             RegisterRequest(
                                 etFullName.text.toString(),

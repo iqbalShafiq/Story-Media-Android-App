@@ -9,6 +9,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import space.iqbalsyafiq.storymedia.model.DataResponse
+import space.iqbalsyafiq.storymedia.model.request.LoginRequest
 import space.iqbalsyafiq.storymedia.model.request.RegisterRequest
 import space.iqbalsyafiq.storymedia.repository.api.ApiConfig
 
@@ -24,6 +25,9 @@ class CredentialViewModel(application: Application) : AndroidViewModel(applicati
 
     private var _duplicateEmailStatus = MutableLiveData<Boolean>()
     val duplicateEmailStatus: LiveData<Boolean> = _duplicateEmailStatus
+
+    private var _loginUserStatus = MutableLiveData<Boolean>()
+    val loginUserStatus: LiveData<Boolean> = _loginUserStatus
 
     fun registerUser(requestBody: RegisterRequest) {
         _loadingState.value = true
@@ -50,6 +54,30 @@ class CredentialViewModel(application: Application) : AndroidViewModel(applicati
                 Log.e(TAG, "onFailure: ${t.message}")
                 _loadingState.value = false
                 _registerUserStatus.value = false
+            }
+        })
+    }
+
+    fun loginUser(requestBody: LoginRequest) {
+        service.loginUser(requestBody).enqueue(object : Callback<DataResponse> {
+            override fun onResponse(call: Call<DataResponse>, response: Response<DataResponse>) {
+                Log.d(TAG, "onResponse: ${response.code()}")
+
+                _loadingState.value = false
+                when {
+                    response.isSuccessful -> {
+                        _loginUserStatus.value = true
+                    }
+                    else -> {
+                        _loginUserStatus.value = false
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<DataResponse>, t: Throwable) {
+                Log.e(TAG, "onFailure: ${t.message}")
+                _loadingState.value = false
+                _loginUserStatus.value = false
             }
         })
     }
