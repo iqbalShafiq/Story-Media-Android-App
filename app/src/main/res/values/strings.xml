@@ -33,4 +33,6 @@
     <string name="wellcome_user">Wellcome %1s</string>
     <string name="log_out">log out</string>
     <string name="story_list">Story List</string>
+    <string name="profile_icon">profile icon</string>
+    <string name="story_photo">story photo</string>
 </resources>

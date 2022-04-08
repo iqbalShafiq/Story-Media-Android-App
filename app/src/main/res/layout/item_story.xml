@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="24dp"
+    android:background="@drawable/bg_radius_8dp"
+    android:backgroundTint="@color/light_secondary"
+    android:paddingTop="19dp">
+
+    <ImageView
+        android:id="@+id/ivIconProfile"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginStart="24dp"
+        android:contentDescription="@string/profile_icon"
+        android:src="@drawable/ic_profile"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        style="@style/Medium14Sp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintBottom_toBottomOf="@id/ivIconProfile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/ivIconProfile"
+        app:layout_constraintTop_toTopOf="@id/ivIconProfile"
+        tools:text="Iqbal Shafiq Rozaan" />
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:contentDescription="@string/story_photo"
+        android:scaleType="fitXY"
+        android:src="@drawable/photo_dummy"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivIconProfile" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
