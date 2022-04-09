@@ -5,7 +5,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
-import android.widget.Toast
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -87,18 +86,20 @@ class StoryViewModel(application: Application) : AndroidViewModel(application) {
 
                 if (response.isSuccessful) {
                     Log.d(TAG, "getListStory onResponse: ${response.body()?.listStory}")
+                    _successState.value = Event(true)
                     response.body()?.listStory?.let {
                         _listStory.value = it
                     }
                 } else {
-                    Toast.makeText(getApplication(), "Please try again", Toast.LENGTH_SHORT).show()
+                    Log.d(TAG, "onResponse: onResponseFail: ${response.body()?.message}")
+                    _successState.value = Event(false)
                 }
             }
 
             override fun onFailure(call: Call<DataResponse>, t: Throwable) {
                 Log.d(TAG, "getListStory onFailure: ${t.message}")
+                _successState.value = Event(false)
                 _loadingState.value = false
-                Toast.makeText(getApplication(), "Please try again", Toast.LENGTH_SHORT).show()
             }
         })
     }

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import space.iqbalsyafiq.storymedia.R
 import space.iqbalsyafiq.storymedia.databinding.FragmentLoginBinding
 import space.iqbalsyafiq.storymedia.model.request.LoginRequest
 import space.iqbalsyafiq.storymedia.ui.credential.CredentialViewModel
@@ -77,7 +78,7 @@ class LoginFragment : Fragment() {
                     // show toast
                     Toast.makeText(
                         requireContext(),
-                        "Login Success!",
+                        requireContext().getString(R.string.login_success),
                         Toast.LENGTH_SHORT
                     ).show()
 
@@ -88,7 +89,7 @@ class LoginFragment : Fragment() {
                 } else {
                     Toast.makeText(
                         requireContext(),
-                        "Invalid Credentials!",
+                        requireContext().getString(R.string.invalid_credentials),
                         Toast.LENGTH_SHORT
                     ).show()
                 }

@@ -27,7 +27,7 @@
     <string name="back">Back</string>
     <string name="walk_human">walk human</string>
     <string name="pass_the_credentials">Pass The Credentials</string>
-    <string name="wellcome_user">Wellcome %1s</string>
+    <string name="welcome_user">Welcome %1s</string>
     <string name="log_out">log out</string>
     <string name="story_list">Story List</string>
     <string name="profile_icon">profile icon</string>
@@ -43,4 +43,11 @@
     <string name="success_upload_an_image">Story has been uploaded successfully.</string>
     <string name="error_when_uploading_image">There is an error when uploading image to Api.</string>
     <string name="empty_photo_and_desc">You have to add photo and description first!</string>
+    <string name="failed_fetching_api">Failed to fetching Api. Please Try Again.</string>
+    <string name="list_is_empty_try_again_later">List is empty, try again later.</string>
+    <string name="login_success">Login Success!</string>
+    <string name="login_failed">Login Failed!</string>
+    <string name="register_success">Register Success!</string>
+    <string name="register_failed">Register Failed!</string>
+    <string name="invalid_credentials">Invalid Credentials!</string>
 </resources>

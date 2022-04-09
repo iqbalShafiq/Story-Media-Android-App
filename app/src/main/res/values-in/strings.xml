@@ -28,7 +28,7 @@
     <string name="back">Kembali</string>
     <string name="walk_human">manusia berjalan</string>
     <string name="pass_the_credentials">Lengkapi Kredensial di Bawah</string>
-    <string name="wellcome_user">Hai %1s</string>
+    <string name="welcome_user">Hai %1s</string>
     <string name="log_out">Keluar</string>
     <string name="story_list">List Cerita</string>
     <string name="profile_icon">ikon profil</string>
@@ -44,4 +44,11 @@
     <string name="success_upload_an_image">Cerita berhasil diunggah.</string>
     <string name="error_when_uploading_image">"Terdapat error saat mengunggah cerita ke Api."</string>
     <string name="empty_photo_and_desc">Anda harus menambahkan foto dan deskripsi terlebih dahulu!</string>
+    <string name="failed_fetching_api">Gagal menghubungkan Api. Tolong coba lagi.</string>
+    <string name="list_is_empty_try_again_later">List masih kosong, coba lagi nanti.</string>
+    <string name="login_success">Login Sukses!</string>
+    <string name="login_failed">Login Gagal!</string>
+    <string name="register_success">Register Sukses!</string>
+    <string name="register_failed">Register Gagal!</string>
+    <string name="invalid_credentials">Terdapat Kesalahan pada Kredensial!</string>
 </resources>

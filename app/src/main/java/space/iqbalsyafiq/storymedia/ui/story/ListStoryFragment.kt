@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
@@ -63,6 +64,18 @@ class ListStoryFragment : Fragment() {
             }
         }
 
+        viewModel.successState.observe(viewLifecycleOwner) { isLoading ->
+            isLoading.getContentIfNotHandled()?.let {
+                if (!it) {
+                    Toast.makeText(
+                        requireContext(),
+                        requireContext().getString(R.string.failed_fetching_api),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+
         viewModel.onCleared.observe(viewLifecycleOwner) { isCleared ->
             isCleared?.let {
                 Intent(requireActivity(), MainActivity::class.java).apply {
@@ -75,7 +88,7 @@ class ListStoryFragment : Fragment() {
             userName?.let {
                 userFullName = userName
                 binding.tvUserName.text = requireContext().getString(
-                    R.string.wellcome_user,
+                    R.string.welcome_user,
                     userName
                 )
             }
@@ -90,8 +103,13 @@ class ListStoryFragment : Fragment() {
 
         viewModel.listStory.observe(viewLifecycleOwner) { stories ->
             stories?.let {
-                adapter = ListStoryAdapter(this, it)
-                binding.rvListStory.adapter = adapter
+                if (stories.isNotEmpty()) {
+                    adapter = ListStoryAdapter(this, it)
+                    binding.rvListStory.adapter = adapter
+                } else {
+                    binding.tvEmptyList.visibility = View.VISIBLE
+                    binding.rvListStory.visibility = View.GONE
+                }
             }
         }
     }
