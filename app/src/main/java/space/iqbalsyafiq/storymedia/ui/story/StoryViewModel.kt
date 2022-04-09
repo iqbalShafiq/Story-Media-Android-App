@@ -10,6 +10,8 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -86,6 +88,31 @@ class StoryViewModel(application: Application) : AndroidViewModel(application) {
                 Toast.makeText(getApplication(), "Please try again", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    // upload story
+    fun uploadStory(token: String, file: MultipartBody.Part, description: RequestBody) {
+        _loadingState.value = true
+
+        service.uploadStory("Bearer $token", file, description)
+            .enqueue(object : Callback<DataResponse> {
+                override fun onResponse(
+                    call: Call<DataResponse>,
+                    response: Response<DataResponse>
+                ) {
+                    _loadingState.value = false
+                    Log.d(TAG, "uploadStory onResponse: ${response.body()?.message}")
+                    Log.d(TAG, "uploadStory onResponse: ${response.body()?.error}")
+                    Toast.makeText(getApplication(), response.body()?.message, Toast.LENGTH_SHORT)
+                        .show()
+                }
+
+                override fun onFailure(call: Call<DataResponse>, t: Throwable) {
+                    Log.d(TAG, "uploadStory onFailure: ${t.message}")
+                }
+
+            })
+
     }
 
     companion object {
