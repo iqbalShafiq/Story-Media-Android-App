@@ -17,6 +17,7 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import space.iqbalsyafiq.storymedia.R
 import space.iqbalsyafiq.storymedia.databinding.ActivityCameraBinding
 import space.iqbalsyafiq.storymedia.utils.createFile
 import space.iqbalsyafiq.storymedia.utils.uriToFile
@@ -96,7 +97,7 @@ class CameraActivity : AppCompatActivity() {
             } catch (exc: Exception) {
                 Toast.makeText(
                     this@CameraActivity,
-                    "Couldn't load camera.",
+                    getString(R.string.could_not_load_camera),
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -114,7 +115,7 @@ class CameraActivity : AppCompatActivity() {
                 override fun onError(exc: ImageCaptureException) {
                     Toast.makeText(
                         this@CameraActivity,
-                        "Gagal mengambil gambar.",
+                        getString(R.string.failed_taking_photo),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -122,7 +123,7 @@ class CameraActivity : AppCompatActivity() {
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     Toast.makeText(
                         this@CameraActivity,
-                        "Berhasil mengambil gambar.",
+                        getString(R.string.success_taking_photo),
                         Toast.LENGTH_SHORT
                     ).show()
 
@@ -150,7 +151,7 @@ class CameraActivity : AppCompatActivity() {
             if (!allPermissionsGranted()) {
                 Toast.makeText(
                     this,
-                    "Camera Need Permission.",
+                    getString(R.string.camera_need_permission),
                     Toast.LENGTH_SHORT
                 ).show()
                 this.onBackPressed()

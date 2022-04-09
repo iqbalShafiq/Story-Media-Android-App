@@ -24,7 +24,6 @@ class MyEditText : AppCompatEditText {
     var isNotEmpty: Boolean = false
     var isEmailValid: Boolean = false
     var isPasswordValid: Boolean = false
-    var isFormEmpty: Boolean = false
 
     constructor(context: Context) : super(context) {
         init()

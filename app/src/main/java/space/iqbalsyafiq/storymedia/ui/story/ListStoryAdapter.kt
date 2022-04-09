@@ -18,7 +18,7 @@ class ListStoryAdapter(
     private var _binding: ItemStoryBinding? = null
     private val binding get() = _binding!!
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {}
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         _binding = ItemStoryBinding.inflate(

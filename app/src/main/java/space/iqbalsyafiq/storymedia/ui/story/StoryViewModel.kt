@@ -110,7 +110,7 @@ class StoryViewModel(application: Application) : AndroidViewModel(application) {
 
         // have to use coroutine because the reduceFileImage can block UI Thread
         viewModelScope.launch(Dispatchers.IO) {
-            // prepare the viewmodel parameter
+            // prepare the view model parameter
             val descriptionRequest = description.toRequestBody(
                 "text/plain".toMediaType()
             )

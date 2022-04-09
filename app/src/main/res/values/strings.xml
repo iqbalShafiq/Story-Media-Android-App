@@ -50,4 +50,8 @@
     <string name="register_success">Register Success!</string>
     <string name="register_failed">Register Failed!</string>
     <string name="invalid_credentials">Invalid Credentials!</string>
+    <string name="success_taking_photo">Success taking the photo.</string>
+    <string name="failed_taking_photo">Failed when taking the photo.</string>
+    <string name="camera_need_permission">Camera need permission.</string>
+    <string name="could_not_load_camera">Could not load the camera</string>
 </resources>

@@ -51,4 +51,8 @@
     <string name="register_success">Register Sukses!</string>
     <string name="register_failed">Register Gagal!</string>
     <string name="invalid_credentials">Terdapat Kesalahan pada Kredensial!</string>
+    <string name="success_taking_photo">Berhasil mengambil gambar.</string>
+    <string name="failed_taking_photo">Gagal mengambil gambar.</string>
+    <string name="camera_need_permission">Kamera butuh izin.</string>
+    <string name="could_not_load_camera">Tidak dapat menampilkan kamera</string>
 </resources>
