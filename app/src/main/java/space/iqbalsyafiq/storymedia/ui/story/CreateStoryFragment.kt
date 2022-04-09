@@ -1,15 +1,25 @@
 package space.iqbalsyafiq.storymedia.ui.story
 
+import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.FitCenter
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import kotlinx.coroutines.launch
 import space.iqbalsyafiq.storymedia.databinding.FragmentCreateStoryBinding
+import space.iqbalsyafiq.storymedia.ui.story.CameraActivity.Companion.CAMERA_X_RESULT
+import space.iqbalsyafiq.storymedia.ui.story.CameraActivity.Companion.IS_USE_BACK
+import space.iqbalsyafiq.storymedia.ui.story.CameraActivity.Companion.PICTURE
+import java.io.File
 
 class CreateStoryFragment : Fragment() {
 
@@ -50,9 +60,43 @@ class CreateStoryFragment : Fragment() {
             }
 
             user?.let {
-                etFullName.setText(user.name)
                 etDescription.isEnabled = true
+
+                // set visibility
+                llAddPhoto.visibility = View.VISIBLE
+                tvLabelFullName.visibility = View.GONE
+                etFullName.visibility = View.GONE
+                ivStoryImage.visibility = View.GONE
+
+                // on llAddPhoto clicked
+                llAddPhoto.setOnClickListener {
+                    Intent(requireActivity(), CameraActivity::class.java).apply {
+                        launcherIntentCameraX.launch(this)
+                    }
+                }
             }
+        }
+    }
+
+    private val launcherIntentCameraX = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        if (it.resultCode == CAMERA_X_RESULT) {
+            val myFile = it.data?.getSerializableExtra(PICTURE) as File
+            val isBackCamera = it.data?.getBooleanExtra(IS_USE_BACK, true) as Boolean
+
+            Log.d(TAG, "launcherIntent: $myFile")
+
+            // set view
+            binding.ivStoryImage.visibility = View.VISIBLE
+            lifecycleScope.launch {
+                val result = BitmapFactory.decodeFile(myFile.path)
+                Glide.with(this@CreateStoryFragment)
+                    .load(result)
+                    .transform(FitCenter(), RoundedCorners(16))
+                    .into(binding.ivStoryImage)
+            }
+            binding.llAddPhoto.visibility = View.GONE
         }
     }
 

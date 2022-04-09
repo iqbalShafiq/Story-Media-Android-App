@@ -37,4 +37,10 @@
     <string name="story_photo">story photo</string>
     <string name="story_detail">Story Detail</string>
     <string name="description">Description</string>
+    <string name="add_photo">Add photo</string>
+    <string name="max_size_upload_1mb">Max size upload 1Mb</string>
+    <string name="gallery_icon">gallery icon</string>
+    <string name="camera_icon">Camera icon</string>
+    <string name="rotate_icon">rotate icon</string>
+    <string name="image_result">image result</string>
 </resources>
