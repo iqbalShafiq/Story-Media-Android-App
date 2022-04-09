@@ -2,10 +2,13 @@ package space.iqbalsyafiq.storymedia.ui.story
 
 import android.Manifest
 import android.content.Intent
+import android.content.Intent.ACTION_GET_CONTENT
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -14,8 +17,9 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import space.iqbalsyafiq.storymedia.Utils.createFile
 import space.iqbalsyafiq.storymedia.databinding.ActivityCameraBinding
+import space.iqbalsyafiq.storymedia.utils.createFile
+import space.iqbalsyafiq.storymedia.utils.uriToFile
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -61,6 +65,8 @@ class CameraActivity : AppCompatActivity() {
             btnTakePhoto.setOnClickListener {
                 takePhoto()
             }
+
+            ivGallery.setOnClickListener { startGallery() }
         }
     }
 
@@ -123,7 +129,6 @@ class CameraActivity : AppCompatActivity() {
                     // intent back
                     Intent(this@CameraActivity, StoryActivity::class.java).apply {
                         putExtra(PICTURE, photoFile)
-                        putExtra(IS_USE_BACK, cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA)
                     }.apply {
                         setResult(CAMERA_X_RESULT, this)
                         finish()
@@ -162,6 +167,30 @@ class CameraActivity : AppCompatActivity() {
         cameraExecutor.shutdown()
     }
 
+    private fun startGallery() {
+        val intent = Intent()
+        intent.action = ACTION_GET_CONTENT
+        intent.type = "image/*"
+        val chooser = Intent.createChooser(intent, "Choose a Picture")
+        launcherIntentGallery.launch(chooser)
+    }
+
+    private val launcherIntentGallery = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val selectedImg: Uri = result.data?.data as Uri
+            val myFile = uriToFile(selectedImg, this@CameraActivity)
+
+            Intent(this@CameraActivity, StoryActivity::class.java).apply {
+                putExtra(PICTURE, myFile)
+            }.apply {
+                setResult(CAMERA_X_RESULT, this)
+                finish()
+            }
+        }
+    }
+
     companion object {
         private val TAG = CameraActivity::class.java.simpleName
 
@@ -172,6 +201,5 @@ class CameraActivity : AppCompatActivity() {
 
         // EXTRA
         const val PICTURE = "Picture"
-        const val IS_USE_BACK = "Is Use Back"
     }
 }

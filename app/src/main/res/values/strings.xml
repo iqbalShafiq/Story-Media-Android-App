@@ -43,4 +43,6 @@
     <string name="camera_icon">Camera icon</string>
     <string name="rotate_icon">rotate icon</string>
     <string name="image_result">image result</string>
+    <string name="success_upload_an_image">"Story has been uploaded successfully."</string>
+    <string name="error_when_uploading_image">"There is an error when uploading image to Api."</string>
 </resources>

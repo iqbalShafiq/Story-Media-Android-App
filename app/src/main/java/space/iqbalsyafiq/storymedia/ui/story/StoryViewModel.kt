@@ -19,6 +19,7 @@ import space.iqbalsyafiq.storymedia.model.DataResponse
 import space.iqbalsyafiq.storymedia.model.Story
 import space.iqbalsyafiq.storymedia.repository.TokenPreferences
 import space.iqbalsyafiq.storymedia.repository.api.ApiConfig
+import space.iqbalsyafiq.storymedia.utils.Event
 
 class StoryViewModel(application: Application) : AndroidViewModel(application) {
     // init data store
@@ -35,6 +36,9 @@ class StoryViewModel(application: Application) : AndroidViewModel(application) {
     // live data
     private var _loadingState = MutableLiveData<Boolean>()
     val loadingState: LiveData<Boolean> = _loadingState
+
+    private var _successState = MutableLiveData<Event<Boolean>>()
+    val successState: LiveData<Event<Boolean>> = _successState
 
     private var _onCleared = MutableLiveData<Boolean>()
     val onCleared: LiveData<Boolean> = _onCleared
@@ -101,14 +105,13 @@ class StoryViewModel(application: Application) : AndroidViewModel(application) {
                     response: Response<DataResponse>
                 ) {
                     _loadingState.value = false
-                    Log.d(TAG, "uploadStory onResponse: ${response.body()?.message}")
-                    Log.d(TAG, "uploadStory onResponse: ${response.body()?.error}")
-                    Toast.makeText(getApplication(), response.body()?.message, Toast.LENGTH_SHORT)
-                        .show()
+                    _successState.value = Event(response.isSuccessful)
                 }
 
                 override fun onFailure(call: Call<DataResponse>, t: Throwable) {
                     Log.d(TAG, "uploadStory onFailure: ${t.message}")
+                    _loadingState.value = false
+                    _successState.value = Event(false)
                 }
 
             })
