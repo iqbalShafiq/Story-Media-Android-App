@@ -2,6 +2,8 @@ package space.iqbalsyafiq.storymedia.ui.story
 
 import android.app.Application
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.util.Log
 import android.widget.Toast
 import androidx.datastore.core.DataStore
@@ -9,9 +11,13 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,6 +26,9 @@ import space.iqbalsyafiq.storymedia.model.Story
 import space.iqbalsyafiq.storymedia.repository.TokenPreferences
 import space.iqbalsyafiq.storymedia.repository.api.ApiConfig
 import space.iqbalsyafiq.storymedia.utils.Event
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
 
 class StoryViewModel(application: Application) : AndroidViewModel(application) {
     // init data store
@@ -95,11 +104,29 @@ class StoryViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     // upload story
-    fun uploadStory(token: String, file: MultipartBody.Part, description: RequestBody) {
+    fun uploadStory(token: String, file: File, description: String) {
         _loadingState.value = true
 
-        service.uploadStory("Bearer $token", file, description)
-            .enqueue(object : Callback<DataResponse> {
+        // have to use coroutine because the reduceFileImage can block UI Thread
+        viewModelScope.launch(Dispatchers.IO) {
+            // prepare the viewmodel parameter
+            val descriptionRequest = description.toRequestBody(
+                "text/plain".toMediaType()
+            )
+            val requestImageFile = reduceFileImage(file).asRequestBody(
+                "image/jpeg".toMediaTypeOrNull()
+            )
+            val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
+                "photo",
+                file.name,
+                requestImageFile
+            )
+
+            service.uploadStory(
+                "Bearer $token",
+                imageMultipart,
+                descriptionRequest
+            ).enqueue(object : Callback<DataResponse> {
                 override fun onResponse(
                     call: Call<DataResponse>,
                     response: Response<DataResponse>
@@ -115,7 +142,22 @@ class StoryViewModel(application: Application) : AndroidViewModel(application) {
                 }
 
             })
+        }
+    }
 
+    private fun reduceFileImage(file: File): File {
+        val bitmap = BitmapFactory.decodeFile(file.path)
+        var compressQuality = 100
+        var streamLength: Int
+        do {
+            val bmpStream = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, compressQuality, bmpStream)
+            val bmpPicByteArray = bmpStream.toByteArray()
+            streamLength = bmpPicByteArray.size
+            compressQuality -= 5
+        } while (streamLength > 1000000)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, compressQuality, FileOutputStream(file))
+        return file
     }
 
     companion object {

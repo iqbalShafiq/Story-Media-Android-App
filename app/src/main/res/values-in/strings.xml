@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Story Media</string>
+    <string name="sit_down_human">Manusia duduk</string>
+    <string name="let_s_join_us">Mari Bergabung!</string>
+    <string name="register_jargon">Kami memberi Anda cara terbaik untuk berbagi cerita dengan teman Anda</string>
+
+    <!-- Edit Text Place Holder -->
+    <string name="input_your_password_here">Masukkan password di sini …</string>
+    <string name="input_your_email_here">Masukkan email di sini …</string>
+    <string name="input_the_description_here">Masukkan deskripsi di sini …</string>
+    <string name="input_your_name_here">Masukkan nama di sini …</string>
+    <string name="story_app_logo">Logo Story Media</string>
+    <string name="story_media">Story Media</string>
+
+    <!-- Other -->
+    <string name="email">Email</string>
+    <string name="join_now">Bergabung Sekarang</string>
+    <string name="sign_in">Masuk</string>
+    <string name="form_could_not_be_empty">%1s form tidak boleh kosong</string>
+    <string name="email_not_valid">Email tidak valid</string>
+    <string name="email_duplicate">Tolong gunakan email lain</string>
+    <string name="let_s_complete_the_form">Mari Lengkapi form di bawah!</string>
+    <string name="full_name">Nama Lengkap</string>
+    <string name="password">Password</string>
+    <string name="password_invalid">Jumlah karakter password harus >6</string>
+    <string name="sign_up">Daftar</string>
+    <string name="back">Kembali</string>
+    <string name="walk_human">manusia berjalan</string>
+    <string name="pass_the_credentials">Lengkapi Kredensial di Bawah</string>
+    <string name="wellcome_user">Hai %1s</string>
+    <string name="log_out">Keluar</string>
+    <string name="story_list">List Cerita</string>
+    <string name="profile_icon">ikon profil</string>
+    <string name="story_photo">foto cerita</string>
+    <string name="story_detail">Detail Cerita</string>
+    <string name="description">Deskripsi</string>
+    <string name="add_photo">Tambahkan foto</string>
+    <string name="max_size_upload_1mb">Maks ukuran unggahan 1Mb</string>
+    <string name="gallery_icon">ikon galeri</string>
+    <string name="camera_icon">Ikon kamera</string>
+    <string name="rotate_icon">ikon berputar</string>
+    <string name="image_result">hasil gambar</string>
+    <string name="success_upload_an_image">Cerita berhasil diunggah.</string>
+    <string name="error_when_uploading_image">"Terdapat error saat mengunggah cerita ke Api."</string>
+    <string name="empty_photo_and_desc">Anda harus menambahkan foto dan deskripsi terlebih dahulu!</string>
+</resources>

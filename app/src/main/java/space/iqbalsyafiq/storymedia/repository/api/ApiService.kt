@@ -11,12 +11,12 @@ import space.iqbalsyafiq.storymedia.model.request.RegisterRequest
 interface ApiService {
     @POST("register")
     fun registerUser(
-        @Body() requestBody: RegisterRequest
+        @Body requestBody: RegisterRequest
     ): Call<DataResponse>
 
     @POST("login")
     fun loginUser(
-        @Body() requestBody: LoginRequest
+        @Body requestBody: LoginRequest
     ): Call<DataResponse>
 
     @GET("stories")

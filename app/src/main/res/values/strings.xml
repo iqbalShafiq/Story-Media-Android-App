@@ -1,13 +1,11 @@
 <resources>
     <string name="app_name">Story Media</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="sit_down_human">sit down human</string>
     <string name="let_s_join_us">Let\'s Join Us</string>
-    <string name="we_provide_you_with_the_best_way_to_share_your_story_with_your_social_friends">We provide you with the best way to share your story with your social friends</string>
+    <string name="register_jargon">We provide you with the best way to share your story with your social friends</string>
 
     <!-- Edit Text Place Holder -->
     <string name="input_your_password_here">Input your password here …</string>
-    <string name="input_your_password_again_here">Input your password again here …</string>
     <string name="input_your_email_here">Input your email here …</string>
     <string name="input_the_description_here">Input the description here …</string>
     <string name="input_your_name_here">Input your name here …</string>
@@ -24,7 +22,6 @@
     <string name="let_s_complete_the_form">Let\'s Complete The Form</string>
     <string name="full_name">Full Name</string>
     <string name="password">Password</string>
-    <string name="password_confirmation">Password Confirmation</string>
     <string name="password_invalid">Password character should be >6</string>
     <string name="sign_up">Sign Up</string>
     <string name="back">Back</string>
@@ -43,6 +40,7 @@
     <string name="camera_icon">Camera icon</string>
     <string name="rotate_icon">rotate icon</string>
     <string name="image_result">image result</string>
-    <string name="success_upload_an_image">"Story has been uploaded successfully."</string>
-    <string name="error_when_uploading_image">"There is an error when uploading image to Api."</string>
+    <string name="success_upload_an_image">Story has been uploaded successfully.</string>
+    <string name="error_when_uploading_image">There is an error when uploading image to Api.</string>
+    <string name="empty_photo_and_desc">You have to add photo and description first!</string>
 </resources>

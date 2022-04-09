@@ -40,7 +40,7 @@
         android:layout_marginHorizontal="30dp"
         android:layout_marginTop="24dp"
         android:gravity="center"
-        android:text="@string/we_provide_you_with_the_best_way_to_share_your_story_with_your_social_friends"
+        android:text="@string/register_jargon"
         android:textColor="@color/light_primary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
