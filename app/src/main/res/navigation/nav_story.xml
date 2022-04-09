@@ -21,6 +21,13 @@
         tools:layout="@layout/fragment_create_story">
         <argument
             android:name="storyDetail"
-            app:argType="space.iqbalsyafiq.storymedia.model.Story" />
+            android:defaultValue="@null"
+            app:argType="space.iqbalsyafiq.storymedia.model.Story"
+            app:nullable="true" />
+        <argument
+            android:name="userLogin"
+            android:defaultValue="@null"
+            app:argType="space.iqbalsyafiq.storymedia.model.LoginResult"
+            app:nullable="true" />
     </fragment>
 </navigation>

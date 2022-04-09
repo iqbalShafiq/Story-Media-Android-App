@@ -71,6 +71,7 @@ class MyEditText : AppCompatEditText {
                             R.color.light_disabled
                         )
                     )
+                    showWarningIcon()
                 } else {
                     isNotEmpty = true
                     startIcon.setTint(

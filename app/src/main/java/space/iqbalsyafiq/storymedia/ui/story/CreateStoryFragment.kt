@@ -1,6 +1,7 @@
 package space.iqbalsyafiq.storymedia.ui.story
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,17 +29,34 @@ class CreateStoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val story = args.storyDetail
+        val user = args.userLogin
+
+        Log.d(TAG, "onViewCreated: $story")
+        Log.d(TAG, "onViewCreated: $user")
 
         with(binding) {
             btnBack.setOnClickListener { requireActivity().onBackPressed() }
-            Glide.with(this@CreateStoryFragment)
-                .asBitmap()
-                .fitCenter()
-                .transform(RoundedCorners(16))
-                .load(story.photoUrl)
-                .into(ivStoryImage)
-            etFullName.setText(story.name)
-            etDescription.setText(story.description)
+
+            // if story not null
+            story?.let {
+                Glide.with(this@CreateStoryFragment)
+                    .asBitmap()
+                    .fitCenter()
+                    .transform(RoundedCorners(16))
+                    .load(story.photoUrl)
+                    .into(ivStoryImage)
+                etFullName.setText(story.name)
+                etDescription.setText(story.description)
+            }
+
+            user?.let {
+                etFullName.setText(user.name)
+                etDescription.isEnabled = true
+            }
         }
+    }
+
+    companion object {
+        private val TAG = CreateStoryFragment::class.java.simpleName
     }
 }

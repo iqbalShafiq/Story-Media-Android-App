@@ -10,6 +10,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import space.iqbalsyafiq.storymedia.R
 import space.iqbalsyafiq.storymedia.databinding.FragmentListStoryBinding
+import space.iqbalsyafiq.storymedia.model.LoginResult
 import space.iqbalsyafiq.storymedia.model.Story
 import space.iqbalsyafiq.storymedia.ui.MainActivity
 
@@ -20,6 +21,7 @@ class ListStoryFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var adapter: ListStoryAdapter
     private var userToken: String = ""
+    private var userFullName: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,6 +43,10 @@ class ListStoryFragment : Fragment() {
 
             btnLogout.setOnClickListener {
                 viewModel.clearToken()
+            }
+
+            btnAdd.setOnClickListener {
+                goToDetail(userLogin = LoginResult(userFullName, userToken, null))
             }
         }
 
@@ -67,6 +73,7 @@ class ListStoryFragment : Fragment() {
 
         viewModel.getName().observe(viewLifecycleOwner) { userName ->
             userName?.let {
+                userFullName = userName
                 binding.tvUserName.text = requireContext().getString(
                     R.string.wellcome_user,
                     userName
@@ -89,8 +96,10 @@ class ListStoryFragment : Fragment() {
         }
     }
 
-    fun goToDetail(story: Story) {
-        val action = ListStoryFragmentDirections.navigateToCreateStory(story)
+    fun goToDetail(story: Story? = null, userLogin: LoginResult? = null) {
+        val action = ListStoryFragmentDirections.navigateToCreateStory()
+        action.storyDetail = story
+        action.userLogin = userLogin
         Navigation.findNavController(binding.root).navigate(action)
     }
 }
