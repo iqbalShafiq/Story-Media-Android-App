@@ -4,10 +4,13 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import space.iqbalsyafiq.storymedia.databinding.ActivityStoryBinding
+import space.iqbalsyafiq.storymedia.ui.ViewModelFactory
 
 class StoryActivity : AppCompatActivity() {
 
-    private val viewModel: StoryViewModel by viewModels()
+    private val viewModel: StoryViewModel by viewModels {
+        ViewModelFactory(this)
+    }
     private var _binding: ActivityStoryBinding? = null
     private val binding get() = _binding
     private var tokenUser: String = ""

@@ -55,4 +55,5 @@
     <string name="failed_taking_photo">Gagal mengambil gambar.</string>
     <string name="camera_need_permission">Kamera butuh izin.</string>
     <string name="could_not_load_camera">Tidak dapat menampilkan kamera</string>
+    <string name="retry">Coba Lagi</string>
 </resources>

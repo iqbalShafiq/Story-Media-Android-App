@@ -1,5 +1,6 @@
 package space.iqbalsyafiq.storymedia.repository.db
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -10,11 +11,11 @@ import space.iqbalsyafiq.storymedia.model.Story
 interface StoryDao {
     // Insert story to database
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertStoryToFavorite(story: Story): Long
+    suspend fun insertStory(stories: List<Story>)
 
     // Get stories
     @Query("SELECT * FROM story")
-    suspend fun getStories(): List<Story>
+    fun getStories(): PagingSource<Int, Story>
 
     // Get story by id
     @Query("SELECT * FROM story WHERE id = :storyId")

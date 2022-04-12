@@ -20,11 +20,11 @@ interface ApiService {
     ): Call<DataResponse>
 
     @GET("stories")
-    fun getAllStories(
+    suspend fun getAllStories(
         @Header("Authorization") authKey: String,
         @Query("page") page: Int? = 1,
         @Query("size") size: Int? = 10
-    ): Call<DataResponse>
+    ): DataResponse
 
     @Multipart
     @POST("stories")

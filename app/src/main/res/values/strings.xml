@@ -54,4 +54,5 @@
     <string name="failed_taking_photo">Failed when taking the photo.</string>
     <string name="camera_need_permission">Camera need permission.</string>
     <string name="could_not_load_camera">Could not load the camera</string>
+    <string name="retry">Retry</string>
 </resources>

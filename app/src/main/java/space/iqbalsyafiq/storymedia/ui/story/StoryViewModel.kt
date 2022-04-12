@@ -10,6 +10,8 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.*
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
@@ -22,14 +24,19 @@ import retrofit2.Callback
 import retrofit2.Response
 import space.iqbalsyafiq.storymedia.model.DataResponse
 import space.iqbalsyafiq.storymedia.model.Story
+import space.iqbalsyafiq.storymedia.repository.StoryRepository
 import space.iqbalsyafiq.storymedia.repository.TokenPreferences
 import space.iqbalsyafiq.storymedia.repository.api.ApiConfig
+import space.iqbalsyafiq.storymedia.repository.db.StoryDatabase
 import space.iqbalsyafiq.storymedia.utils.Event
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 
-class StoryViewModel(application: Application) : AndroidViewModel(application) {
+class StoryViewModel(
+    private val storyRepository: StoryRepository,
+    application: Application
+) : AndroidViewModel(application) {
     // init data store
     private val loginTokenKey = stringPreferencesKey("login_token")
     private val nameKey = stringPreferencesKey("name")
@@ -41,6 +48,9 @@ class StoryViewModel(application: Application) : AndroidViewModel(application) {
     // init api
     private val service = ApiConfig.getApiService()
 
+    // init db
+    private val db = StoryDatabase(getApplication())
+
     // live data
     private var _loadingState = MutableLiveData<Boolean>()
     val loadingState: LiveData<Boolean> = _loadingState
@@ -51,8 +61,9 @@ class StoryViewModel(application: Application) : AndroidViewModel(application) {
     private var _onCleared = MutableLiveData<Boolean>()
     val onCleared: LiveData<Boolean> = _onCleared
 
-    private var _listStory = MutableLiveData<List<Story>>()
-    val listStory: LiveData<List<Story>> = _listStory
+    fun getListStory(token: String): LiveData<PagingData<Story>> = storyRepository.getStory(
+        token
+    ).cachedIn(viewModelScope)
 
     // get token
     @JvmName("getToken1")
@@ -72,36 +83,6 @@ class StoryViewModel(application: Application) : AndroidViewModel(application) {
             pref.clearPreference(nameKey)
             _onCleared.value = true
         }
-    }
-
-    // get list story
-    fun getListStory(token: String) {
-        _loadingState.value = true
-
-        service.getAllStories(
-            "Bearer $token"
-        ).enqueue(object : Callback<DataResponse> {
-            override fun onResponse(call: Call<DataResponse>, response: Response<DataResponse>) {
-                _loadingState.value = false
-
-                if (response.isSuccessful) {
-                    Log.d(TAG, "getListStory onResponse: ${response.body()?.listStory}")
-                    _successState.value = Event(true)
-                    response.body()?.listStory?.let {
-                        _listStory.value = it
-                    }
-                } else {
-                    Log.d(TAG, "onResponse: onResponseFail: ${response.body()?.message}")
-                    _successState.value = Event(false)
-                }
-            }
-
-            override fun onFailure(call: Call<DataResponse>, t: Throwable) {
-                Log.d(TAG, "getListStory onFailure: ${t.message}")
-                _successState.value = Event(false)
-                _loadingState.value = false
-            }
-        })
     }
 
     // upload story

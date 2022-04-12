@@ -2,6 +2,7 @@ package space.iqbalsyafiq.storymedia.ui.story
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,14 +11,20 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import space.iqbalsyafiq.storymedia.R
+import space.iqbalsyafiq.storymedia.adapter.ListStoryAdapter
+import space.iqbalsyafiq.storymedia.adapter.LoadingStateAdapter
 import space.iqbalsyafiq.storymedia.databinding.FragmentListStoryBinding
 import space.iqbalsyafiq.storymedia.model.LoginResult
 import space.iqbalsyafiq.storymedia.model.Story
 import space.iqbalsyafiq.storymedia.ui.MainActivity
+import space.iqbalsyafiq.storymedia.ui.ViewModelFactory
 
 class ListStoryFragment : Fragment() {
 
-    private val viewModel: StoryViewModel by activityViewModels()
+    private val viewModel: StoryViewModel by activityViewModels {
+        ViewModelFactory(requireContext())
+    }
+
     private var _binding: FragmentListStoryBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: ListStoryAdapter
@@ -38,7 +45,6 @@ class ListStoryFragment : Fragment() {
 
         with(binding) {
             swipeRefresh.setOnRefreshListener {
-                viewModel.getListStory(userToken)
                 swipeRefresh.isRefreshing = false
             }
 
@@ -59,7 +65,6 @@ class ListStoryFragment : Fragment() {
             isLoading?.let {
                 with(binding) {
                     progressLoading.visibility = if (it) View.VISIBLE else View.GONE
-                    rvListStory.visibility = if (it) View.GONE else View.VISIBLE
                 }
             }
         }
@@ -97,19 +102,24 @@ class ListStoryFragment : Fragment() {
         viewModel.getToken().observe(viewLifecycleOwner) { token ->
             token?.let {
                 userToken = token
-                viewModel.getListStory(userToken)
+                Log.d(TAG, "observeLiveData: $userToken")
+                getData()
             }
         }
+    }
 
-        viewModel.listStory.observe(viewLifecycleOwner) { stories ->
+    private fun getData() {
+        adapter = ListStoryAdapter(this)
+        binding.rvListStory.adapter = adapter.withLoadStateFooter(
+            footer = LoadingStateAdapter {
+                adapter.retry()
+            }
+        )
+
+        viewModel.getListStory(userToken).observe(viewLifecycleOwner) { stories ->
             stories?.let {
-                if (stories.isNotEmpty()) {
-                    adapter = ListStoryAdapter(this, it)
-                    binding.rvListStory.adapter = adapter
-                } else {
-                    binding.tvEmptyList.visibility = View.VISIBLE
-                    binding.rvListStory.visibility = View.GONE
-                }
+                Log.d(TAG, "observeLiveData getList: $userToken")
+                adapter.submitData(lifecycle, it)
             }
         }
     }
@@ -119,5 +129,9 @@ class ListStoryFragment : Fragment() {
         action.storyDetail = story
         action.userLogin = userLogin
         Navigation.findNavController(binding.root).navigate(action)
+    }
+
+    companion object {
+        private val TAG = ListStoryFragment::class.java.simpleName
     }
 }

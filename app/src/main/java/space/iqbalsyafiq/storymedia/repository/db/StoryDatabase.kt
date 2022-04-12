@@ -13,7 +13,7 @@ import space.iqbalsyafiq.storymedia.model.Story
     version = 2
 )
 abstract class StoryDatabase : RoomDatabase() {
-    abstract fun userDao(): StoryDao
+    abstract fun storyDao(): StoryDao
 
     companion object {
         @Volatile
