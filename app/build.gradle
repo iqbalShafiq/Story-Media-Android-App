@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-android-extensions'
     id 'kotlin-kapt'
     id 'androidx.navigation.safeargs'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
 android {
@@ -37,6 +38,9 @@ android {
         enabled = true
     }
     dataBinding.enabled = true
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
@@ -48,6 +52,7 @@ dependencies {
     implementation 'androidx.room:room-runtime:2.4.2'
     implementation 'androidx.room:room-ktx:2.4.2'
     implementation 'androidx.room:room-paging:2.5.0-alpha01'
+    implementation 'com.google.android.gms:play-services-maps:18.0.2'
     kapt 'androidx.room:room-compiler:2.4.2'
 
     // CameraX

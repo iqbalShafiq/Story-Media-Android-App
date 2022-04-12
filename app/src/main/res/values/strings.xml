@@ -55,4 +55,6 @@
     <string name="camera_need_permission">Camera need permission.</string>
     <string name="could_not_load_camera">Could not load the camera</string>
     <string name="retry">Retry</string>
+    <string name="map_icon">Map icon</string>
+    <string name="title_activity_maps">MapsActivity</string>
 </resources>

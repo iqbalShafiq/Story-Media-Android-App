@@ -18,6 +18,7 @@ import space.iqbalsyafiq.storymedia.model.LoginResult
 import space.iqbalsyafiq.storymedia.model.Story
 import space.iqbalsyafiq.storymedia.ui.MainActivity
 import space.iqbalsyafiq.storymedia.ui.ViewModelFactory
+import space.iqbalsyafiq.storymedia.ui.maps.MapsActivity
 
 class ListStoryFragment : Fragment() {
 
@@ -45,6 +46,7 @@ class ListStoryFragment : Fragment() {
 
         with(binding) {
             swipeRefresh.setOnRefreshListener {
+                viewModel.getToken()
                 swipeRefresh.isRefreshing = false
             }
 
@@ -54,6 +56,12 @@ class ListStoryFragment : Fragment() {
 
             btnAdd.setOnClickListener {
                 goToDetail(userLogin = LoginResult(userFullName, userToken, null))
+            }
+
+            btnMap.setOnClickListener {
+                Intent(requireActivity(), MapsActivity::class.java).apply {
+                    startActivity(this)
+                }
             }
         }
 
