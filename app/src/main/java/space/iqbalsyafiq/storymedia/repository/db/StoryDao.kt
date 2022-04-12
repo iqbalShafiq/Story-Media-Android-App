@@ -17,6 +17,10 @@ interface StoryDao {
     @Query("SELECT * FROM story")
     fun getStories(): PagingSource<Int, Story>
 
+    // Get stories
+    @Query("SELECT * FROM story")
+    suspend fun getMapStories(): List<Story>
+
     // Get story by id
     @Query("SELECT * FROM story WHERE id = :storyId")
     suspend fun getStory(storyId: String): Story?
