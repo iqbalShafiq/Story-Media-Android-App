@@ -47,6 +47,7 @@ class ListStoryFragment : Fragment() {
         with(binding) {
             swipeRefresh.setOnRefreshListener {
                 viewModel.getToken()
+                getData()
                 swipeRefresh.isRefreshing = false
             }
 
@@ -118,7 +119,10 @@ class ListStoryFragment : Fragment() {
 
     private fun getData() {
         adapter = ListStoryAdapter(this)
-        binding.rvListStory.adapter = adapter.withLoadStateFooter(
+        binding.rvListStory.adapter = adapter.withLoadStateHeaderAndFooter(
+            header = LoadingStateAdapter {
+                adapter.retry()
+            },
             footer = LoadingStateAdapter {
                 adapter.retry()
             }

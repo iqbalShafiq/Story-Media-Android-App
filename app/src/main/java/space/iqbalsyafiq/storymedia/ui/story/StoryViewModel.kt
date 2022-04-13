@@ -61,10 +61,6 @@ class StoryViewModel(
     private var _onCleared = MutableLiveData<Boolean>()
     val onCleared: LiveData<Boolean> = _onCleared
 
-    fun getListStory(token: String): LiveData<PagingData<Story>> = storyRepository.getStory(
-        token
-    ).cachedIn(viewModelScope)
-
     // get token
     @JvmName("getToken1")
     fun getToken(): LiveData<String> {
@@ -84,6 +80,11 @@ class StoryViewModel(
             _onCleared.value = true
         }
     }
+
+    // get list of story
+    fun getListStory(token: String): LiveData<PagingData<Story>> = storyRepository.getStory(
+        token
+    ).cachedIn(viewModelScope)
 
     // upload story
     fun uploadStory(
