@@ -6,6 +6,7 @@ import android.content.res.Resources
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -31,6 +32,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private var intentData: String? = null
     private var marker: Marker? = null
     private var selectedLocation: LatLng? = null
 
@@ -45,6 +47,31 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        // get intent data if exist
+        intentData = intent.getStringExtra(INTENT_DATA)
+
+        // set other view
+        with(binding) {
+            // on back pressed
+            btnBack.setOnClickListener { onBackPressed() }
+
+            // action when intentData is exist
+            intentData?.let {
+                // set visibility
+                btnMyLocation.visibility = View.VISIBLE
+                btnAdd.visibility = View.VISIBLE
+
+                // set my location button on click listener
+                btnMyLocation.setOnClickListener { getMyLastLocation() }
+
+                // set add button on click listener
+                btnAdd.setOnClickListener {
+                    setResult(resultCode)
+                    finish()
+                }
+            }
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -90,11 +117,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun getMyLastLocation() {
-        if (checkPermission(Manifest.permission.ACCESS_FINE_LOCATION) &&
+        if (
+            checkPermission(Manifest.permission.ACCESS_FINE_LOCATION) &&
             checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
         ) {
             fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
                 if (location != null) {
+                    // animate camera
                     mMap.animateCamera(
                         CameraUpdateFactory.newLatLngZoom(
                             LatLng(
@@ -103,6 +132,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                             ), 15f
                         )
                     )
+
+                    // set marker
+                    setMarkerLocation(LatLng(location.latitude, location.longitude))
                 } else {
                     Toast.makeText(
                         this@MapsActivity,
@@ -200,5 +232,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     companion object {
         private val TAG = MapsActivity::class.java.simpleName
+        const val INTENT_DATA = "Intent Data"
+        const val resultCode = 202
     }
 }
