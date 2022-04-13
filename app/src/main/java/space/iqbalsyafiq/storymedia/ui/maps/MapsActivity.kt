@@ -19,6 +19,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import space.iqbalsyafiq.storymedia.R
 import space.iqbalsyafiq.storymedia.databinding.ActivityMapsBinding
@@ -30,6 +31,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private var marker: Marker? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,6 +63,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // observe live data
         observeLiveData()
+
+        // mark clicked map
+        mMap.setOnMapClickListener {
+            marker = if (marker != null) {
+                marker?.remove()
+                null
+            } else {
+                mMap.addMarker(
+                    MarkerOptions()
+                        .position(it)
+                        .title("Marked")
+                )
+            }
+        }
     }
 
     private fun getMyLastLocation() {
