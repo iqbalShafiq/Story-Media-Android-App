@@ -89,7 +89,6 @@ class MyEditText : AppCompatEditText {
                     }
                 }
 
-                // show warning and pass icon by type
                 if (this@MyEditText.inputType == PASSWORD) { // check password type
                     if (text?.length ?: 0 < 6) {
                         isPasswordValid = false
@@ -129,6 +128,7 @@ class MyEditText : AppCompatEditText {
             PASSWORD -> "Password"
             EMAIL -> "Email"
             PERSON_NAME -> "Full Name"
+            LOCATION -> "Location"
             else -> "Description"
         }
     }
@@ -151,6 +151,12 @@ class MyEditText : AppCompatEditText {
                 ContextCompat.getDrawable(
                     context,
                     R.drawable.ic_profile
+                ) as Drawable
+            }
+            LOCATION -> {
+                ContextCompat.getDrawable(
+                    context,
+                    R.drawable.ic_maps
                 ) as Drawable
             }
             else -> {
@@ -248,5 +254,6 @@ class MyEditText : AppCompatEditText {
         const val PASSWORD = 129
         const val EMAIL = 33
         const val PERSON_NAME = 97
+        const val LOCATION = 1
     }
 }

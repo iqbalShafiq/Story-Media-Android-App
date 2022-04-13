@@ -16,8 +16,10 @@ import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.FitCenter
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.google.android.gms.maps.model.LatLng
 import space.iqbalsyafiq.storymedia.R
 import space.iqbalsyafiq.storymedia.databinding.FragmentCreateStoryBinding
+import space.iqbalsyafiq.storymedia.ui.maps.MapsActivity
 import space.iqbalsyafiq.storymedia.ui.story.CameraActivity.Companion.CAMERA_X_RESULT
 import space.iqbalsyafiq.storymedia.ui.story.CameraActivity.Companion.PICTURE
 import java.io.File
@@ -31,6 +33,7 @@ class CreateStoryFragment : Fragment() {
     private var myFile: File? = null
     private var progressDrawable: CircularProgressDrawable? = null
     private var hasPhoto: Boolean = false
+    private var storyLocation: LatLng? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -60,6 +63,30 @@ class CreateStoryFragment : Fragment() {
                 etFullName.setText(story.name)
                 etDescription.setText(story.description)
                 btnUpload.visibility = View.GONE
+
+                // set location visibility
+                if (it.lat != null && it.lon != null) {
+                    etLocation.setText(
+                        requireContext().getString(
+                            R.string.lat_lon,
+                            it.lat.toString(),
+                            it.lon.toString()
+                        )
+                    )
+
+                    ivSetLocation.setOnClickListener { _ ->
+                        Intent(requireActivity(), MapsActivity::class.java).apply {
+                            putExtra(
+                                MapsActivity.LOCATION_DATA,
+                                LatLng(it.lat, it.lon)
+                            )
+                            startActivity(this)
+                        }
+                    }
+                } else {
+                    tvLabelLocation.visibility = View.GONE
+                    etLocation.visibility = View.GONE
+                }
             }
 
             // create mode
@@ -79,6 +106,17 @@ class CreateStoryFragment : Fragment() {
                     }
                 }
 
+                // on set location clicked
+                ivSetLocation.setOnClickListener {
+                    Intent(requireActivity(), MapsActivity::class.java).apply {
+                        putExtra(
+                            MapsActivity.INTENT_DATA,
+                            "get location"
+                        )
+                        launcherMapsActivity.launch(this)
+                    }
+                }
+
                 ivStoryImage.setOnClickListener {
                     Intent(requireActivity(), CameraActivity::class.java).apply {
                         launcherIntentCameraX.launch(this)
@@ -87,9 +125,15 @@ class CreateStoryFragment : Fragment() {
 
                 btnUpload.setOnClickListener {
                     // check description and photo
-                    if (etDescription.isNotEmpty && hasPhoto) {
+                    if (etDescription.isNotEmpty && hasPhoto && etLocation.isNotEmpty) {
                         args.userLogin?.token?.let {
-                            viewModel.uploadStory(it, myFile!!, etDescription.text.toString())
+                            viewModel.uploadStory(
+                                it,
+                                myFile!!,
+                                etDescription.text.toString(),
+                                storyLocation?.latitude.toString(),
+                                storyLocation?.longitude.toString()
+                            )
                         }
                     } else {
                         Toast.makeText(
@@ -163,6 +207,21 @@ class CreateStoryFragment : Fragment() {
                 .into(binding.ivStoryImage)
             binding.llAddPhoto.visibility = View.GONE
 
+        }
+    }
+
+    private val launcherMapsActivity = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        if (it.resultCode == MapsActivity.resultCode) {
+            storyLocation = it.data?.getParcelableExtra(MapsActivity.SET_LOCATION_DATA)
+            binding.etLocation.setText(
+                requireContext().getString(
+                    R.string.lat_lon,
+                    storyLocation?.latitude.toString(),
+                    storyLocation?.longitude.toString()
+                )
+            )
         }
     }
 

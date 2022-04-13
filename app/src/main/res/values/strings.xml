@@ -42,7 +42,7 @@
     <string name="image_result">image result</string>
     <string name="success_upload_an_image">Story has been uploaded successfully.</string>
     <string name="error_when_uploading_image">There is an error when uploading image to Api.</string>
-    <string name="empty_photo_and_desc">You have to add photo and description first!</string>
+    <string name="empty_photo_and_desc">You have to add photo, location, and description first!</string>
     <string name="failed_fetching_api">Failed to fetching Api. Please Try Again.</string>
     <string name="list_is_empty_try_again_later">List is empty, try again later.</string>
     <string name="login_success">Login Success!</string>
@@ -55,6 +55,9 @@
     <string name="camera_need_permission">Camera need permission.</string>
     <string name="could_not_load_camera">Could not load the camera</string>
     <string name="retry">Retry</string>
+    <string name="lat_lon">%1s, %2s</string>
     <string name="map_icon">Map icon</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="location">Location</string>
+    <string name="click_here_to_select_your_location">Click icon to select your location</string>
 </resources>

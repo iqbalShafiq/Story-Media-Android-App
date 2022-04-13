@@ -92,6 +92,52 @@
                 android:paddingVertical="16dp"
                 tools:text="Iqbal Shafiq Rozaan" />
 
+            <!-- Location -->
+            <TextView
+                android:id="@+id/tvLabelLocation"
+                style="@style/Medium14Sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:labelFor="@id/etLocation"
+                android:text="@string/location" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="7dp"
+                android:weightSum="4">
+
+                <space.iqbalsyafiq.storymedia.component.MyEditText
+                    android:id="@+id/etLocation"
+                    style="@style/Medium14Sp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="9dp"
+                    android:layout_weight="3"
+                    android:drawableStart="@drawable/ic_maps"
+                    android:enabled="false"
+                    android:hint="@string/click_here_to_select_your_location"
+                    android:inputType="text"
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="16dp" />
+
+                <ImageView
+                    android:id="@+id/ivSetLocation"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="9dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_radius_8dp"
+                    android:backgroundTint="@color/red_accent"
+                    android:contentDescription="@string/location"
+                    android:padding="18dp"
+                    android:src="@drawable/ic_maps"
+                    app:tint="@color/light_primary" />
+
+            </LinearLayout>
+
             <!-- Description -->
             <TextView
                 style="@style/Medium14Sp"

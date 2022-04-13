@@ -43,7 +43,7 @@
     <string name="image_result">hasil gambar</string>
     <string name="success_upload_an_image">Cerita berhasil diunggah.</string>
     <string name="error_when_uploading_image">"Terdapat error saat mengunggah cerita ke Api."</string>
-    <string name="empty_photo_and_desc">Anda harus menambahkan foto dan deskripsi terlebih dahulu!</string>
+    <string name="empty_photo_and_desc">Anda harus menambahkan foto, lokasi, dan deskripsi terlebih dahulu!</string>
     <string name="failed_fetching_api">Gagal menghubungkan Api. Tolong coba lagi.</string>
     <string name="list_is_empty_try_again_later">List masih kosong, coba lagi nanti.</string>
     <string name="login_success">Login Sukses!</string>
@@ -56,5 +56,9 @@
     <string name="camera_need_permission">Kamera butuh izin.</string>
     <string name="could_not_load_camera">Tidak dapat menampilkan kamera</string>
     <string name="retry">Coba Lagi</string>
+    <string name="lat_lon">%1s, %2s</string>
     <string name="map_icon">Map icon</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="location">Location</string>
+    <string name="click_here_to_select_your_location">Click here to select your location</string>
 </resources>

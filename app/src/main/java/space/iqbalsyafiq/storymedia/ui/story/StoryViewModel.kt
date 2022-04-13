@@ -86,13 +86,25 @@ class StoryViewModel(
     }
 
     // upload story
-    fun uploadStory(token: String, file: File, description: String) {
+    fun uploadStory(
+        token: String,
+        file: File,
+        description: String,
+        lat: String = "",
+        lng: String = ""
+    ) {
         _loadingState.value = true
 
         // have to use coroutine because the reduceFileImage can block UI Thread
         viewModelScope.launch(Dispatchers.IO) {
             // prepare the view model parameter
             val descriptionRequest = description.toRequestBody(
+                "text/plain".toMediaType()
+            )
+            val latRequest = lat.toRequestBody(
+                "text/plain".toMediaType()
+            )
+            val lngRequest = lng.toRequestBody(
                 "text/plain".toMediaType()
             )
             val requestImageFile = reduceFileImage(file).asRequestBody(
@@ -107,7 +119,9 @@ class StoryViewModel(
             service.uploadStory(
                 "Bearer $token",
                 imageMultipart,
-                descriptionRequest
+                descriptionRequest,
+                latRequest,
+                lngRequest
             ).enqueue(object : Callback<DataResponse> {
                 override fun onResponse(
                     call: Call<DataResponse>,

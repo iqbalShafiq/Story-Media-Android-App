@@ -1,6 +1,7 @@
 package space.iqbalsyafiq.storymedia.ui.maps
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.location.Location
@@ -24,6 +25,7 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import space.iqbalsyafiq.storymedia.R
 import space.iqbalsyafiq.storymedia.databinding.ActivityMapsBinding
+import space.iqbalsyafiq.storymedia.ui.story.StoryActivity
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -33,6 +35,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivityMapsBinding
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var intentData: String? = null
+    private var locationFromIntent: LatLng? = null
     private var marker: Marker? = null
     private var selectedLocation: LatLng? = null
 
@@ -50,6 +53,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // get intent data if exist
         intentData = intent.getStringExtra(INTENT_DATA)
+        locationFromIntent = intent.getParcelableExtra(LOCATION_DATA)
 
         // set other view
         with(binding) {
@@ -67,8 +71,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 // set add button on click listener
                 btnAdd.setOnClickListener {
-                    setResult(resultCode)
-                    finish()
+                    selectedLocation?.let { latLng ->
+                        Log.d(TAG, "onCreate: $latLng")
+                        Intent(this@MapsActivity, StoryActivity::class.java).apply {
+                            putExtra(SET_LOCATION_DATA, latLng)
+                            setResult(resultCode, this)
+                        }
+                        finish()
+                    }
                 }
             }
         }
@@ -94,6 +104,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         // mark clicked map
         mMap.setOnMapClickListener {
             setMarkerLocation(it)
+        }
+
+        // check location intent
+        locationFromIntent?.let {
+            moveAndAnimateCamera(it)
         }
     }
 
@@ -124,12 +139,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
                 if (location != null) {
                     // animate camera
-                    mMap.animateCamera(
-                        CameraUpdateFactory.newLatLngZoom(
-                            LatLng(
-                                location.latitude,
-                                location.longitude
-                            ), 15f
+                    moveAndAnimateCamera(
+                        LatLng(
+                            location.latitude,
+                            location.longitude
                         )
                     )
 
@@ -153,6 +166,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    private fun moveAndAnimateCamera(latLng: LatLng) {
+        mMap.animateCamera(
+            CameraUpdateFactory.newLatLngZoom(
+                latLng, 15f
+            )
+        )
+    }
+
     private fun observeLiveData() {
         viewModel.storyList.observe(this) { stories ->
             stories?.let {
@@ -170,7 +191,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     }
                 }
 
-                getMyLastLocation()
+                if (locationFromIntent == null) {
+                    getMyLastLocation()
+                }
             }
         }
     }
@@ -233,6 +256,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     companion object {
         private val TAG = MapsActivity::class.java.simpleName
         const val INTENT_DATA = "Intent Data"
+        const val LOCATION_DATA = "Location Intent Data"
+        const val SET_LOCATION_DATA = "Set Location Data"
         const val resultCode = 202
     }
 }

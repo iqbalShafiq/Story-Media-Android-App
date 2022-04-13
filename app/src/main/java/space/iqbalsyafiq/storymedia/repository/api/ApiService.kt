@@ -31,6 +31,8 @@ interface ApiService {
     fun uploadStory(
         @Header("Authorization") authKey: String,
         @Part file: MultipartBody.Part,
-        @Part("description") description: RequestBody
+        @Part("description") description: RequestBody,
+        @Part("lat") lat: RequestBody,
+        @Part("lon") lng: RequestBody
     ): Call<DataResponse>
 }
