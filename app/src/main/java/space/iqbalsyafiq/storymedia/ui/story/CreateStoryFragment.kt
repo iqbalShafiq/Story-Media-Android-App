@@ -86,6 +86,7 @@ class CreateStoryFragment : Fragment() {
                 } else {
                     tvLabelLocation.visibility = View.GONE
                     etLocation.visibility = View.GONE
+                    ivSetLocation.visibility = View.GONE
                 }
             }
 
@@ -113,6 +114,19 @@ class CreateStoryFragment : Fragment() {
                             MapsActivity.INTENT_DATA,
                             "get location"
                         )
+
+                        if (etLocation.isNotEmpty) {
+                            val location = etLocation.text
+                                .toString()
+                                .split(",")
+                                .map { it.trim() }
+
+                            putExtra(
+                                MapsActivity.LOCATION_DATA,
+                                LatLng(location[0].toDouble(), location[1].toDouble())
+                            )
+                        }
+
                         launcherMapsActivity.launch(this)
                     }
                 }

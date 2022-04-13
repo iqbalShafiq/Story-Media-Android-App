@@ -103,23 +103,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // mark clicked map
         mMap.setOnMapClickListener {
-            setMarkerLocation(it)
+            if (intentData != null) {
+                setMarkerLocation(it)
+            }
         }
 
         // check location intent
-        locationFromIntent?.let {
-            moveAndAnimateCamera(it)
+        locationFromIntent?.let { latLng ->
+            moveAndAnimateCamera(latLng)
+            intentData?.let { setMarkerLocation(latLng) }
         }
     }
 
     private fun setMarkerLocation(location: LatLng) {
         marker = if (marker != null) {
             marker?.remove()
-            mMap.addMarker(
-                MarkerOptions()
-                    .position(location)
-                    .title("Marked")
-            )
+            mMap.addMarker(MarkerOptions().position(location))
         } else {
             mMap.addMarker(
                 MarkerOptions()
@@ -147,7 +146,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     )
 
                     // set marker
-                    setMarkerLocation(LatLng(location.latitude, location.longitude))
+                    if (locationFromIntent != null || intentData != null) {
+                        setMarkerLocation(LatLng(location.latitude, location.longitude))
+                    }
                 } else {
                     Toast.makeText(
                         this@MapsActivity,
