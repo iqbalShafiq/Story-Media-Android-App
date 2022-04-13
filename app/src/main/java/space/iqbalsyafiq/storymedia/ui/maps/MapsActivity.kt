@@ -32,6 +32,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivityMapsBinding
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var marker: Marker? = null
+    private var selectedLocation: LatLng? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +51,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap = googleMap
 
         // Add a marker in Sydney and move the camera
-        mMap.uiSettings.isZoomControlsEnabled = true
         mMap.uiSettings.isIndoorLevelPickerEnabled = true
         mMap.uiSettings.isCompassEnabled = true
         mMap.uiSettings.isMapToolbarEnabled = true
@@ -66,17 +66,27 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // mark clicked map
         mMap.setOnMapClickListener {
-            marker = if (marker != null) {
-                marker?.remove()
-                null
-            } else {
-                mMap.addMarker(
-                    MarkerOptions()
-                        .position(it)
-                        .title("Marked")
-                )
-            }
+            setMarkerLocation(it)
         }
+    }
+
+    private fun setMarkerLocation(location: LatLng) {
+        marker = if (marker != null) {
+            marker?.remove()
+            mMap.addMarker(
+                MarkerOptions()
+                    .position(location)
+                    .title("Marked")
+            )
+        } else {
+            mMap.addMarker(
+                MarkerOptions()
+                    .position(location)
+                    .title("Marked")
+            )
+        }
+
+        selectedLocation = location
     }
 
     private fun getMyLastLocation() {
