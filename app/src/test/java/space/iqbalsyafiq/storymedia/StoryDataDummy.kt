@@ -1,5 +1,6 @@
 package space.iqbalsyafiq.storymedia
 
+import space.iqbalsyafiq.storymedia.model.DataResponse
 import space.iqbalsyafiq.storymedia.model.Story
 
 object StoryDataDummy {
@@ -19,5 +20,23 @@ object StoryDataDummy {
             items.add(story)
         }
         return items
+    }
+
+    fun generateSuccessRegisterResponse(): DataResponse {
+        return DataResponse(
+            error = false,
+            message = "User created",
+            listStory = null,
+            loginResult = null
+        )
+    }
+
+    fun generateSuccessLoginResponse(): DataResponse {
+        return DataResponse(
+            error = true,
+            message = "User created",
+            listStory = null,
+            loginResult = null
+        )
     }
 }

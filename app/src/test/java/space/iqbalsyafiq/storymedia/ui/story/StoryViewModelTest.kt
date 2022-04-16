@@ -38,13 +38,13 @@ class StoryViewModelTest {
     private lateinit var storyViewModel: StoryViewModel
 
     @Test
-    fun `when Get Quote Should Not Null`() = mainCoroutineRules.runBlockingTest {
+    fun `when Get Story Should Not Null`() = mainCoroutineRules.runBlockingTest {
         val dummyStory = StoryDataDummy.generateStoryDataDummy()
         val data = PagedTestDataSources.snapshot(dummyStory)
-        val quote = MutableLiveData<PagingData<Story>>()
-        quote.value = data
+        val story = MutableLiveData<PagingData<Story>>()
+        story.value = data
 
-        Mockito.`when`(storyViewModel.getListStory("Bearer Token")).thenReturn(quote)
+        Mockito.`when`(storyViewModel.getListStory("Bearer Token")).thenReturn(story)
         val actualStory = storyViewModel.getListStory("Bearer Token").getOrAwaitValue()
 
         val differ = AsyncPagingDataDiffer(

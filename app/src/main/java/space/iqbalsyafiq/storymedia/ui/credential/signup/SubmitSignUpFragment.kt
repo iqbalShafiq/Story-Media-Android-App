@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
+import kotlinx.coroutines.launch
 import space.iqbalsyafiq.storymedia.R
 import space.iqbalsyafiq.storymedia.databinding.FragmentSubmitSignUpBinding
 import space.iqbalsyafiq.storymedia.model.request.RegisterRequest
@@ -55,13 +57,15 @@ class SubmitSignUpFragment : Fragment() {
                 // checking email and full name
                 if (etEmail.isNotEmpty) {
                     if (etEmail.isEmailValid) {
-                        viewModel.registerUser(
-                            RegisterRequest(
-                                etFullName.text.toString(),
-                                etEmail.text.toString(),
-                                etPassword.text.toString()
+                        lifecycleScope.launch {
+                            viewModel.registerUser(
+                                RegisterRequest(
+                                    etFullName.text.toString(),
+                                    etEmail.text.toString(),
+                                    etPassword.text.toString()
+                                )
                             )
-                        )
+                        }
                     } else etEmail.onEmailInvalid()
                 } else etEmail.onFormEmpty()
             }

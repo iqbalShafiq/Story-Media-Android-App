@@ -13,6 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -23,6 +24,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import kotlinx.coroutines.launch
 import space.iqbalsyafiq.storymedia.R
 import space.iqbalsyafiq.storymedia.databinding.ActivityMapsBinding
 import space.iqbalsyafiq.storymedia.ui.story.StoryActivity
@@ -96,7 +98,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         setMapStyle()
 
         // get all user's story from database
-        viewModel.getMapStoryList()
+        lifecycleScope.launch {
+            viewModel.getMapStoryList()
+        }
 
         // observe live data
         observeLiveData()
