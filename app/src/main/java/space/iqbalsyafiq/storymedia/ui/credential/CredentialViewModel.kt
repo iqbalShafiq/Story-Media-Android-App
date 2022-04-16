@@ -9,8 +9,10 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import space.iqbalsyafiq.storymedia.model.request.LoginRequest
 import space.iqbalsyafiq.storymedia.model.request.RegisterRequest
@@ -76,31 +78,6 @@ class CredentialViewModel(application: Application) : AndroidViewModel(applicati
                 )
             }
         }
-
-//        service.registerUser(requestBody).enqueue(object : Callback<DataResponse> {
-//            override fun onResponse(call: Call<DataResponse>, response: Response<DataResponse>) {
-//                Log.d(TAG, "onResponse: ${response.code()}")
-//
-//                when {
-//                    response.isSuccessful -> {
-//                        _registerUserStatus.value = true
-//                        loginUser(LoginRequest(requestBody.email, requestBody.password))
-//                    }
-//                    response.code() == 400 -> {
-//                        _duplicateEmailStatus.value = true
-//                    }
-//                    else -> {
-//                        _registerUserStatus.value = false
-//                    }
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<DataResponse>, t: Throwable) {
-//                Log.e(TAG, "onFailure: ${t.message}")
-//                _loadingState.value = false
-//                _registerUserStatus.value = false
-//            }
-//        })
     }
 
     suspend fun loginUser(
@@ -120,48 +97,21 @@ class CredentialViewModel(application: Application) : AndroidViewModel(applicati
                 _loginUserStatus.value = false
             }
             else -> {
-                pref.savePreference(
-                    response.loginResult?.token ?: "",
-                    loginTokenKey
-                )
-                pref.savePreference(
-                    response.loginResult?.name ?: "",
-                    nameKey
-                )
+                _loadingState.value = false
+                _loginUserStatus.value = true
+
+                viewModelScope.launch(dispatcher) {
+                    pref.savePreference(
+                        response.loginResult?.token ?: "",
+                        loginTokenKey
+                    )
+                    pref.savePreference(
+                        response.loginResult?.name ?: "",
+                        nameKey
+                    )
+                }
             }
         }
-
-//        service.loginUser(requestBody).enqueue(object : Callback<DataResponse> {
-//            override fun onResponse(call: Call<DataResponse>, response: Response<DataResponse>) {
-//                Log.d(TAG, "onResponse: ${response.body()?.loginResult?.token}")
-//
-//                _loadingState.value = false
-//                when {
-//                    response.isSuccessful -> {
-//                        _loginUserStatus.value = true
-//                        viewModelScope.launch {
-//                            pref.savePreference(
-//                                response.body()?.loginResult?.token ?: "",
-//                                loginTokenKey
-//                            )
-//                            pref.savePreference(
-//                                response.body()?.loginResult?.name ?: "",
-//                                nameKey
-//                            )
-//                        }
-//                    }
-//                    else -> {
-//                        _loginUserStatus.value = false
-//                    }
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<DataResponse>, t: Throwable) {
-//                Log.e(TAG, "onFailure: ${t.message}")
-//                _loadingState.value = false
-//                _loginUserStatus.value = false
-//            }
-//        })
     }
 
     companion object {

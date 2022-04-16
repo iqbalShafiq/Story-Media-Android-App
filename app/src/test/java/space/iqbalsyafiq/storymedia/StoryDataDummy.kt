@@ -1,6 +1,7 @@
 package space.iqbalsyafiq.storymedia
 
 import space.iqbalsyafiq.storymedia.model.DataResponse
+import space.iqbalsyafiq.storymedia.model.LoginResult
 import space.iqbalsyafiq.storymedia.model.Story
 
 object StoryDataDummy {
@@ -33,10 +34,14 @@ object StoryDataDummy {
 
     fun generateSuccessLoginResponse(): DataResponse {
         return DataResponse(
-            error = true,
-            message = "User created",
+            error = false,
+            message = "success",
             listStory = null,
-            loginResult = null
+            loginResult = LoginResult(
+                name = "iqbal",
+                token = "TOKEN",
+                userId = "lANSKoS0Ak7X4hXR"
+            )
         )
     }
 }
