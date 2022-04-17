@@ -13,7 +13,7 @@ import space.iqbalsyafiq.storymedia.repository.TokenPreferences
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     // init data store
-    val loginTokenKey = stringPreferencesKey("login_token")
+    private val loginTokenKey = stringPreferencesKey("login_token")
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
         name = "login_token_setting"
     )

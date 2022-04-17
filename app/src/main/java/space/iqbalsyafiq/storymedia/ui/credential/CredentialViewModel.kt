@@ -126,8 +126,4 @@ class CredentialViewModel(application: Application) : AndroidViewModel(applicati
             _loginUserStatus.value = false
         }
     }
-
-    companion object {
-        private val TAG = CredentialActivity::class.java.simpleName
-    }
 }

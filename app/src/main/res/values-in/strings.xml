@@ -59,6 +59,6 @@
     <string name="lat_lon">%1s, %2s</string>
     <string name="map_icon">Map icon</string>
     <string name="title_activity_maps">MapsActivity</string>
-    <string name="location">Location</string>
-    <string name="click_here_to_select_your_location">Click here to select your location</string>
+    <string name="location">Lokasi</string>
+    <string name="click_here_to_select_your_location">Pilih lokasi di kanan</string>
 </resources>
