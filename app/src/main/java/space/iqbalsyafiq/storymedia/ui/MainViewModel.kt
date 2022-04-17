@@ -13,7 +13,7 @@ import space.iqbalsyafiq.storymedia.repository.TokenPreferences
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     // init data store
-    private val loginTokenKey = stringPreferencesKey("login_token")
+    val loginTokenKey = stringPreferencesKey("login_token")
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
         name = "login_token_setting"
     )
@@ -21,7 +21,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     // get token
     @JvmName("getToken1")
-    fun getToken(): LiveData<String> {
-        return pref.loadPreference(loginTokenKey).asLiveData()
+    fun getToken(tokenPref: TokenPreferences = pref): LiveData<String> {
+        return tokenPref.loadPreference(loginTokenKey).asLiveData()
     }
 }
