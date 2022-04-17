@@ -1,0 +1,51 @@
+Skenario Pengujian:
+
+MainViewModel
+
+1. Ketika token yang didapatkan tidak kosong.
+	Memastikan token yang didapat tidak kosong.
+
+
+CredentialViewModel
+
+1. Ketika user berhasil register
+	Memastikan registerUserStatus.value = true
+
+2. Ketika user berhasil login
+	Memastikan loginUserStatus = true
+
+
+StoryViewModel
+
+1. Ketika token yang didapatkan tidak kosong.
+	Memastikan mengembalikan LiveData<String>.
+	Memastikan token tidak kosong
+
+2. Ketika nama yang didapatkan tidak kosong.
+	Memastikan mengembalikan LiveData<String>.
+	Memastikan nama tidak kosong
+
+3. Ketika token dikosongkan oleh user saat melakukan logout
+	Memastikan token yang diload dari datastore kosong
+	Memastikan name yang diload dari datastore kosong
+	Memastikan onCleared.value = true
+
+4. Ketika story berhasil diupload
+	Memastikan successState.value bernilai Event(true)
+
+5. Ketika berhasil memuat list story
+	Memastikan story tidak null
+	Memastikan jumlah story sesuai yang diharapkan
+
+
+MapsViewModel
+
+1. Ketika berhasil memuat list story pada map
+	Memastikan story tidak kosong
+
+
+ListStoryFragment
+
+1. Ketika berhasil menampilkan data pada List Story Fragment
+	Memastikan RecyclerView Tampil
+	Memastikan Data yang tampil sesuai
