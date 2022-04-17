@@ -55,20 +55,20 @@ class StoryViewModel(
 
     // get token
     @JvmName("getToken1")
-    fun getToken(): LiveData<String> {
-        return pref.loadPreference(loginTokenKey).asLiveData()
+    fun getToken(tokenPreferences: TokenPreferences = pref): LiveData<String> {
+        return tokenPreferences.loadPreference(loginTokenKey).asLiveData()
     }
 
     // get name
-    fun getName(): LiveData<String> {
-        return pref.loadPreference(nameKey).asLiveData()
+    fun getName(tokenPreferences: TokenPreferences = pref): LiveData<String> {
+        return tokenPreferences.loadPreference(nameKey).asLiveData()
     }
 
     // get name
-    fun clearToken() {
+    fun clearToken(tokenPreferences: TokenPreferences = pref) {
         viewModelScope.launch {
-            pref.clearPreference(loginTokenKey)
-            pref.clearPreference(nameKey)
+            tokenPreferences.clearPreference(loginTokenKey)
+            tokenPreferences.clearPreference(nameKey)
             _onCleared.value = true
         }
     }

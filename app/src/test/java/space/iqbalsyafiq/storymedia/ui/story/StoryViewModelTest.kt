@@ -3,6 +3,7 @@ package space.iqbalsyafiq.storymedia.ui.story
 import android.app.Application
 import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.AsyncPagingDataDiffer
@@ -11,6 +12,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import androidx.recyclerview.widget.ListUpdateCallback
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.assertEquals
@@ -30,6 +32,7 @@ import space.iqbalsyafiq.storymedia.adapter.ListStoryAdapter
 import space.iqbalsyafiq.storymedia.getOrAwaitValue
 import space.iqbalsyafiq.storymedia.model.Story
 import space.iqbalsyafiq.storymedia.repository.StoryRepository
+import space.iqbalsyafiq.storymedia.repository.TokenPreferences
 import space.iqbalsyafiq.storymedia.utils.Event
 import space.iqbalsyafiq.storymedia.utils.Helper
 import java.io.File
@@ -55,6 +58,9 @@ class StoryViewModelTest {
     @Mock
     private lateinit var helper: Helper
 
+    @Mock
+    private lateinit var tokenPreferences: TokenPreferences
+
     private lateinit var viewModel: StoryViewModel
 
     @Before
@@ -68,7 +74,61 @@ class StoryViewModelTest {
 
         // mock the reduce file image helper
         `when`(helper.reduceFileImage(File("asd"))).thenReturn(File("asd"))
+
+        // mock tokenPreference
+        val tokenFlow = flowOf("Bearer Token")
+        val nameFlow = flowOf("User Full Name")
+        val tokenKeyString = stringPreferencesKey("login_token")
+        val nameKeyString = stringPreferencesKey("name")
+
+        `when`(tokenPreferences.loadPreference(tokenKeyString)).thenReturn(tokenFlow)
+        `when`(tokenPreferences.loadPreference(nameKeyString)).thenReturn(nameFlow)
     }
+
+    @Test
+    fun `when Get Token then Should Not Empty`() = mainCoroutineRules.runBlockingTest {
+        val token = viewModel.getToken(tokenPreferences).getOrAwaitValue()
+
+        // assert token
+        println(token)
+        assertEquals("Bearer Token", token)
+    }
+
+    @Test
+    fun `when Get Name then Should Not Empty`() = mainCoroutineRules.runBlockingTest {
+        val name = viewModel.getName(tokenPreferences).getOrAwaitValue()
+
+        // assert name
+        println(name)
+        assertEquals("User Full Name", name)
+    }
+
+    @Test
+    fun `when Clear Token then Should Turn Empty Token and Name`() =
+        mainCoroutineRules.runBlockingTest {
+            // mocking clear preference
+            var token = "Bearer Token"
+            var name = "User Full Name"
+            val tokenKeyString = stringPreferencesKey("login_token")
+            val nameKeyString = stringPreferencesKey("name")
+
+            `when`(tokenPreferences.clearPreference(tokenKeyString)).then {
+                token = ""
+                println("Token has cleared")
+            }
+
+            `when`(tokenPreferences.clearPreference(nameKeyString)).then {
+                name = ""
+                println("Name has cleared")
+            }
+
+            // call clear method
+            viewModel.clearToken(tokenPreferences)
+
+            // assert token
+            assertEquals("", token)
+            assertEquals("", name)
+        }
 
     @Test
     fun `when Create Story Should Not Error`() = mainCoroutineRules.runBlockingTest {
