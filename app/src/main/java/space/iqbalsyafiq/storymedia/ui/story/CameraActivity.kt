@@ -19,8 +19,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import space.iqbalsyafiq.storymedia.R
 import space.iqbalsyafiq.storymedia.databinding.ActivityCameraBinding
-import space.iqbalsyafiq.storymedia.utils.createFile
-import space.iqbalsyafiq.storymedia.utils.uriToFile
+import space.iqbalsyafiq.storymedia.utils.Helper.createFile
+import space.iqbalsyafiq.storymedia.utils.Helper.uriToFile
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 

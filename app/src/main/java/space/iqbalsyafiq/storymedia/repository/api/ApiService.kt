@@ -2,7 +2,6 @@ package space.iqbalsyafiq.storymedia.repository.api
 
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import retrofit2.Call
 import retrofit2.http.*
 import space.iqbalsyafiq.storymedia.model.DataResponse
 import space.iqbalsyafiq.storymedia.model.request.LoginRequest
@@ -28,11 +27,11 @@ interface ApiService {
 
     @Multipart
     @POST("stories")
-    fun uploadStory(
+    suspend fun uploadStory(
         @Header("Authorization") authKey: String,
         @Part file: MultipartBody.Part,
         @Part("description") description: RequestBody,
         @Part("lat") lat: RequestBody,
         @Part("lon") lng: RequestBody
-    ): Call<DataResponse>
+    ): DataResponse
 }

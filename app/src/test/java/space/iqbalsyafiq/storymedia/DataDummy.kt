@@ -4,7 +4,7 @@ import space.iqbalsyafiq.storymedia.model.DataResponse
 import space.iqbalsyafiq.storymedia.model.LoginResult
 import space.iqbalsyafiq.storymedia.model.Story
 
-object StoryDataDummy {
+object DataDummy {
     fun generateStoryDataDummy(): List<Story> {
         val items: MutableList<Story> = arrayListOf()
         for (i in 0..100) {
@@ -42,6 +42,15 @@ object StoryDataDummy {
                 token = "TOKEN",
                 userId = "lANSKoS0Ak7X4hXR"
             )
+        )
+    }
+
+    fun generateCreateStoryResponse(): DataResponse {
+        return DataResponse(
+            error = false,
+            message = "Story created successfully",
+            listStory = null,
+            loginResult = null
         )
     }
 }

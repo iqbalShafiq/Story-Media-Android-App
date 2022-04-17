@@ -2,9 +2,6 @@ package space.iqbalsyafiq.storymedia.ui.story
 
 import android.app.Application
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -12,26 +9,24 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import space.iqbalsyafiq.storymedia.model.DataResponse
 import space.iqbalsyafiq.storymedia.model.Story
 import space.iqbalsyafiq.storymedia.repository.StoryRepository
 import space.iqbalsyafiq.storymedia.repository.TokenPreferences
 import space.iqbalsyafiq.storymedia.repository.api.ApiConfig
+import space.iqbalsyafiq.storymedia.repository.api.ApiService
 import space.iqbalsyafiq.storymedia.repository.db.StoryDatabase
 import space.iqbalsyafiq.storymedia.utils.Event
-import java.io.ByteArrayOutputStream
+import space.iqbalsyafiq.storymedia.utils.Helper
 import java.io.File
-import java.io.FileOutputStream
 
 class StoryViewModel(
     private val storyRepository: StoryRepository,
@@ -92,12 +87,15 @@ class StoryViewModel(
         file: File,
         description: String,
         lat: String = "",
-        lng: String = ""
+        lng: String = "",
+        dispatcher: CoroutineDispatcher = Dispatchers.IO,
+        apiService: ApiService = service,
+        helper: Helper = Helper
     ) {
         _loadingState.value = true
 
         // have to use coroutine because the reduceFileImage can block UI Thread
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcher) {
             // prepare the view model parameter
             val descriptionRequest = description.toRequestBody(
                 "text/plain".toMediaType()
@@ -108,7 +106,7 @@ class StoryViewModel(
             val lngRequest = lng.toRequestBody(
                 "text/plain".toMediaType()
             )
-            val requestImageFile = reduceFileImage(file).asRequestBody(
+            val requestImageFile = helper.reduceFileImage(file).asRequestBody(
                 "image/jpeg".toMediaTypeOrNull()
             )
             val imageMultipart: MultipartBody.Part = MultipartBody.Part.createFormData(
@@ -117,44 +115,31 @@ class StoryViewModel(
                 requestImageFile
             )
 
-            service.uploadStory(
-                "Bearer $token",
-                imageMultipart,
-                descriptionRequest,
-                latRequest,
-                lngRequest
-            ).enqueue(object : Callback<DataResponse> {
-                override fun onResponse(
-                    call: Call<DataResponse>,
-                    response: Response<DataResponse>
-                ) {
+            val response = withContext(dispatcher) {
+                apiService.uploadStory(
+                    "Bearer $token",
+                    imageMultipart,
+                    descriptionRequest,
+                    latRequest,
+                    lngRequest
+                )
+            }
+
+            when (response.error) {
+                false -> {
                     _loadingState.value = false
-                    _successState.value = Event(response.isSuccessful)
+                    _successState.value = Event(true)
                 }
 
-                override fun onFailure(call: Call<DataResponse>, t: Throwable) {
-                    Log.d(TAG, "uploadStory onFailure: ${t.message}")
+                true -> {
                     _loadingState.value = false
                     _successState.value = Event(false)
                 }
-
-            })
+                else -> {
+                    // Do nothing
+                }
+            }
         }
-    }
-
-    private fun reduceFileImage(file: File): File {
-        val bitmap = BitmapFactory.decodeFile(file.path)
-        var compressQuality = 100
-        var streamLength: Int
-        do {
-            val bmpStream = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.JPEG, compressQuality, bmpStream)
-            val bmpPicByteArray = bmpStream.toByteArray()
-            streamLength = bmpPicByteArray.size
-            compressQuality -= 5
-        } while (streamLength > 1000000)
-        bitmap.compress(Bitmap.CompressFormat.JPEG, compressQuality, FileOutputStream(file))
-        return file
     }
 
     companion object {

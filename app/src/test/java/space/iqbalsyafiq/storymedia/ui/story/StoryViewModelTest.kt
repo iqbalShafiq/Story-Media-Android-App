@@ -1,5 +1,7 @@
 package space.iqbalsyafiq.storymedia.ui.story
 
+import android.app.Application
+import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,17 +15,24 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
+import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
+import space.iqbalsyafiq.storymedia.ApiServiceFake
+import space.iqbalsyafiq.storymedia.DataDummy
 import space.iqbalsyafiq.storymedia.MainCoroutineRule
-import space.iqbalsyafiq.storymedia.StoryDataDummy
 import space.iqbalsyafiq.storymedia.adapter.ListStoryAdapter
 import space.iqbalsyafiq.storymedia.getOrAwaitValue
 import space.iqbalsyafiq.storymedia.model.Story
+import space.iqbalsyafiq.storymedia.repository.StoryRepository
+import space.iqbalsyafiq.storymedia.utils.Event
+import space.iqbalsyafiq.storymedia.utils.Helper
+import java.io.File
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -35,16 +44,65 @@ class StoryViewModelTest {
     var mainCoroutineRules = MainCoroutineRule()
 
     @Mock
+    private lateinit var storyRepository: StoryRepository
+
+    @Mock
     private lateinit var storyViewModel: StoryViewModel
+
+    @Mock
+    private lateinit var application: Application
+
+    @Mock
+    private lateinit var helper: Helper
+
+    private lateinit var viewModel: StoryViewModel
+
+    @Before
+    fun setup() {
+        // mocking application context
+        val context = Mockito.mock(Context::class.java)
+        `when`(application.applicationContext).thenReturn(context)
+
+        // init viewModel
+        viewModel = StoryViewModel(storyRepository, application)
+
+        // mock the reduce file image helper
+        `when`(helper.reduceFileImage(File("asd"))).thenReturn(File("asd"))
+    }
+
+    @Test
+    fun `when Create Story Should Not Error`() = mainCoroutineRules.runBlockingTest {
+        // set api fake
+        val apiServiceFake = ApiServiceFake()
+
+        // call upload story
+        viewModel.uploadStory(
+            "Bearer Token",
+            File("asd"),
+            "halo",
+            "-7.123",
+            "121.1111",
+            mainCoroutineRules.dispatcher,
+            apiServiceFake,
+            helper
+        )
+
+        // assert success state
+        val expectedValue = Event(true).getContentIfNotHandled()
+        val actualValue = viewModel.successState.getOrAwaitValue().getContentIfNotHandled()
+        println(actualValue)
+
+        assertEquals(expectedValue, actualValue)
+    }
 
     @Test
     fun `when Get Story Should Not Null`() = mainCoroutineRules.runBlockingTest {
-        val dummyStory = StoryDataDummy.generateStoryDataDummy()
+        val dummyStory = DataDummy.generateStoryDataDummy()
         val data = PagedTestDataSources.snapshot(dummyStory)
         val story = MutableLiveData<PagingData<Story>>()
         story.value = data
 
-        Mockito.`when`(storyViewModel.getListStory("Bearer Token")).thenReturn(story)
+        `when`(storyViewModel.getListStory("Bearer Token")).thenReturn(story)
         val actualStory = storyViewModel.getListStory("Bearer Token").getOrAwaitValue()
 
         val differ = AsyncPagingDataDiffer(

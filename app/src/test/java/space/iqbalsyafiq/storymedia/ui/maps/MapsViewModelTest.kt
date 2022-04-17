@@ -14,8 +14,8 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import org.mockito.junit.MockitoJUnitRunner
+import space.iqbalsyafiq.storymedia.DataDummy
 import space.iqbalsyafiq.storymedia.MainCoroutineRule
-import space.iqbalsyafiq.storymedia.StoryDataDummy
 import space.iqbalsyafiq.storymedia.getOrAwaitValue
 import space.iqbalsyafiq.storymedia.repository.db.StoryDao
 
@@ -50,7 +50,7 @@ class MapsViewModelTest {
     @Test
     fun `when Get Story Should be Not Empty`() = mainCoroutineRules.runBlockingTest {
         // set expected list story
-        val expectedStory = StoryDataDummy.generateStoryDataDummy()
+        val expectedStory = DataDummy.generateStoryDataDummy()
 
         // set dao mocking
         `when`(dao.getMapStories()).thenReturn(expectedStory)
