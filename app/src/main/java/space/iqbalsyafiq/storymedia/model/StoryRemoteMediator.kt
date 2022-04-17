@@ -9,6 +9,7 @@ import androidx.room.withTransaction
 import space.iqbalsyafiq.storymedia.repository.api.ApiService
 import space.iqbalsyafiq.storymedia.repository.db.RemoteKeys
 import space.iqbalsyafiq.storymedia.repository.db.StoryDatabase
+import space.iqbalsyafiq.storymedia.utils.wrapEspressoIdlingResource
 
 @OptIn(ExperimentalPagingApi::class)
 class StoryRemoteMediator(
@@ -40,34 +41,35 @@ class StoryRemoteMediator(
                 nextKey
             }
         }
+        wrapEspressoIdlingResource {
+            try {
+                Log.d(TAG, "load: $tokenApi")
+                val responseData = apiService.getAllStories(
+                    "Bearer $tokenApi",
+                    page,
+                    state.config.pageSize
+                )
+                val storyList = responseData.listStory as MutableList<Story>
 
-        return try {
-            Log.d(TAG, "load: $tokenApi")
-            val responseData = apiService.getAllStories(
-                "Bearer $tokenApi",
-                page,
-                state.config.pageSize
-            )
-            val storyList = responseData.listStory as MutableList<Story>
+                val endOfPaginationReached = storyList.isEmpty()
+                database.withTransaction {
+                    if (loadType == LoadType.REFRESH) {
+                        database.remoteKeysDao().deleteRemoteKeys()
+                        database.storyDao().deleteStories()
+                    }
 
-            val endOfPaginationReached = storyList.isEmpty()
-            database.withTransaction {
-                if (loadType == LoadType.REFRESH) {
-                    database.remoteKeysDao().deleteRemoteKeys()
-                    database.storyDao().deleteStories()
+                    val prevKey = if (page == 1) null else page - 1
+                    val nextKey = if (endOfPaginationReached) null else page + 1
+                    val keys = storyList.map {
+                        RemoteKeys(id = it.id, prevKey = prevKey, nextKey = nextKey)
+                    }
+                    database.remoteKeysDao().insertAll(keys)
+                    database.storyDao().insertStory(storyList)
                 }
-
-                val prevKey = if (page == 1) null else page - 1
-                val nextKey = if (endOfPaginationReached) null else page + 1
-                val keys = storyList.map {
-                    RemoteKeys(id = it.id, prevKey = prevKey, nextKey = nextKey)
-                }
-                database.remoteKeysDao().insertAll(keys)
-                database.storyDao().insertStory(storyList)
+                return MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
+            } catch (exception: Exception) {
+                return MediatorResult.Error(exception)
             }
-            MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
-        } catch (exception: Exception) {
-            MediatorResult.Error(exception)
         }
     }
 

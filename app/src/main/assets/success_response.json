@@ -1,0 +1,96 @@
+{
+  "error": false,
+  "message": "Stories fetched successfully",
+  "listStory": [
+    {
+      "id": "story-y1FXLsKM6ZRCLaG0",
+      "name": "Ardana",
+      "description": "okk",
+      "photoUrl": "https://story-api.dicoding.dev/images/stories/photos-1650187709823_zOz873jc.jpg",
+      "createdAt": "2022-04-17T09:28:29.824Z",
+      "lat": null,
+      "lon": null
+    },
+    {
+      "id": "story-Pi0v54ubms_J6U2u",
+      "name": "Test",
+      "description": "bisa ges",
+      "photoUrl": "https://story-api.dicoding.dev/images/stories/photos-1650187617204_A6B3S2aM.jpg",
+      "createdAt": "2022-04-17T09:26:57.206Z",
+      "lat": null,
+      "lon": null
+    },
+    {
+      "id": "story-VtvWdliefxr_G6W-",
+      "name": "lea",
+      "description": "\"aaaaaa\"",
+      "photoUrl": "https://story-api.dicoding.dev/images/stories/photos-1650187567481_AQL6rbDY.jpg",
+      "createdAt": "2022-04-17T09:26:07.485Z",
+      "lat": null,
+      "lon": null
+    },
+    {
+      "id": "story-ggrtu-NM96ERMG5D",
+      "name": "auliaanz ",
+      "description": "\"hmmmm\"",
+      "photoUrl": "https://story-api.dicoding.dev/images/stories/photos-1650187361947_O8Tl7rHw.jpg",
+      "createdAt": "2022-04-17T09:22:41.951Z",
+      "lat": null,
+      "lon": null
+    },
+    {
+      "id": "story-1dsAise73yRZw60n",
+      "name": "brakatawa",
+      "description": "haha",
+      "photoUrl": "https://story-api.dicoding.dev/images/stories/photos-1650187242626_E3y_s3ww.jpg",
+      "createdAt": "2022-04-17T09:20:42.632Z",
+      "lat": null,
+      "lon": null
+    },
+    {
+      "id": "story-g30TLmviJvhio4VG",
+      "name": "DD",
+      "description": "EE",
+      "photoUrl": "https://story-api.dicoding.dev/images/stories/photos-1650187189322_wbmyhBCh.jpg",
+      "createdAt": "2022-04-17T09:19:49.325Z",
+      "lat": 0.5103583,
+      "lon": 101.4492783
+    },
+    {
+      "id": "story-u_z5eiudTikWb3Hx",
+      "name": "Abdullah Azzam",
+      "description": "Test from Postman",
+      "photoUrl": "https://story-api.dicoding.dev/images/stories/photos-1650187171979_NPMswcxP.png",
+      "createdAt": "2022-04-17T09:19:31.983Z",
+      "lat": null,
+      "lon": null
+    },
+    {
+      "id": "story-_uyvsDNA2FaNlJBy",
+      "name": "Muh",
+      "description": "User did not write description",
+      "photoUrl": "https://story-api.dicoding.dev/images/stories/photos-1650187142024_giGrbSYR.jpg",
+      "createdAt": "2022-04-17T09:19:02.031Z",
+      "lat": null,
+      "lon": null
+    },
+    {
+      "id": "story-vYgq_GkmvxW3l86u",
+      "name": "alfa",
+      "description": "siuuuu",
+      "photoUrl": "https://story-api.dicoding.dev/images/stories/photos-1650186947695_7w8zAmTL.jpg",
+      "createdAt": "2022-04-17T09:15:47.697Z",
+      "lat": null,
+      "lon": null
+    },
+    {
+      "id": "story-KYm5eiA2oYQgrptL",
+      "name": "Muh",
+      "description": "woiwiss\n",
+      "photoUrl": "https://story-api.dicoding.dev/images/stories/photos-1650186936573_FdggJ1P8.jpg",
+      "createdAt": "2022-04-17T09:15:36.576Z",
+      "lat": null,
+      "lon": null
+    }
+  ]
+}
