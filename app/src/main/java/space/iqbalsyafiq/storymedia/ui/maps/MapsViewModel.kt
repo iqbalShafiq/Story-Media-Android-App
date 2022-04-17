@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.async
 import space.iqbalsyafiq.storymedia.model.Story
+import space.iqbalsyafiq.storymedia.repository.db.StoryDao
 import space.iqbalsyafiq.storymedia.repository.db.StoryDatabase
 
 class MapsViewModel(application: Application) : AndroidViewModel(application) {
@@ -18,13 +19,11 @@ class MapsViewModel(application: Application) : AndroidViewModel(application) {
     val storyList: LiveData<List<Story>> = _storyList
 
     // get map story list
-    suspend fun getMapStoryList(): LiveData<List<Story>> {
+    suspend fun getMapStoryList(dao: StoryDao = storyDao) {
         val stories = viewModelScope.async {
-            storyDao.getMapStories()
+            dao.getMapStories()
         }
 
         _storyList.value = stories.await()
-
-        return storyList
     }
 }

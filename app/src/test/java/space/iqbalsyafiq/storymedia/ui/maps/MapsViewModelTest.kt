@@ -1,21 +1,23 @@
 package space.iqbalsyafiq.storymedia.ui.maps
 
+import android.app.Application
+import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.Mockito.`when`
+import org.mockito.Mockito.mock
 import org.mockito.junit.MockitoJUnitRunner
 import space.iqbalsyafiq.storymedia.MainCoroutineRule
 import space.iqbalsyafiq.storymedia.StoryDataDummy
 import space.iqbalsyafiq.storymedia.getOrAwaitValue
-import space.iqbalsyafiq.storymedia.model.Story
+import space.iqbalsyafiq.storymedia.repository.db.StoryDao
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -28,21 +30,39 @@ class MapsViewModelTest {
     var mainCoroutineRules = MainCoroutineRule()
 
     @Mock
+    private lateinit var dao: StoryDao
+
+    @Mock
+    private lateinit var application: Application
+
     private lateinit var viewModel: MapsViewModel
+
+    @Before
+    fun setup() {
+        // prepare application context
+        val context = mock(Context::class.java)
+        `when`(application.applicationContext).thenReturn(context)
+
+        // init view model
+        viewModel = MapsViewModel(application)
+    }
 
     @Test
     fun `when Get Story Should be Not Empty`() = mainCoroutineRules.runBlockingTest {
-        val expectedStory = MutableLiveData<List<Story>>()
-        expectedStory.value = StoryDataDummy.generateStoryDataDummy()
-        `when`(viewModel.getMapStoryList()).thenReturn(expectedStory)
+        // set expected list story
+        val expectedStory = StoryDataDummy.generateStoryDataDummy()
+
+        // set dao mocking
+        `when`(dao.getMapStories()).thenReturn(expectedStory)
+
+        // call getMapStoryList
+        viewModel.getMapStoryList(dao)
 
         // actual stories
-        val actualStories = viewModel.getMapStoryList().getOrAwaitValue()
-
-        // verify mocking method
-        Mockito.verify(viewModel).getMapStoryList()
+        val actualStories = viewModel.storyList.getOrAwaitValue()
 
         // check actual stories
-        assertEquals(expectedStory.value, actualStories)
+        println(actualStories)
+        assertEquals(expectedStory, actualStories)
     }
 }
