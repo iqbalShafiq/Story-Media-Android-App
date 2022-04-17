@@ -23,10 +23,10 @@ import space.iqbalsyafiq.storymedia.repository.StoryRepository
 import space.iqbalsyafiq.storymedia.repository.TokenPreferences
 import space.iqbalsyafiq.storymedia.repository.api.ApiConfig
 import space.iqbalsyafiq.storymedia.repository.api.ApiService
-import space.iqbalsyafiq.storymedia.repository.db.StoryDatabase
 import space.iqbalsyafiq.storymedia.utils.Event
 import space.iqbalsyafiq.storymedia.utils.Helper
 import java.io.File
+import java.net.UnknownHostException
 
 class StoryViewModel(
     private val storyRepository: StoryRepository,
@@ -42,9 +42,6 @@ class StoryViewModel(
 
     // init api
     private val service = ApiConfig.getApiService()
-
-    // init db
-    private val db = StoryDatabase(getApplication())
 
     // live data
     private var _loadingState = MutableLiveData<Boolean>()
@@ -115,34 +112,35 @@ class StoryViewModel(
                 requestImageFile
             )
 
-            val response = withContext(dispatcher) {
-                apiService.uploadStory(
-                    "Bearer $token",
-                    imageMultipart,
-                    descriptionRequest,
-                    latRequest,
-                    lngRequest
-                )
-            }
-
-            when (response.error) {
-                false -> {
-                    _loadingState.value = false
-                    _successState.value = Event(true)
+            try {
+                val response = withContext(dispatcher) {
+                    apiService.uploadStory(
+                        "Bearer $token",
+                        imageMultipart,
+                        descriptionRequest,
+                        latRequest,
+                        lngRequest
+                    )
                 }
 
-                true -> {
-                    _loadingState.value = false
-                    _successState.value = Event(false)
+                when (response.error as Boolean) {
+                    false -> {
+                        _loadingState.postValue(false)
+                        _successState.postValue(Event(true))
+                    }
+
+                    true -> {
+                        _loadingState.postValue(false)
+                        _successState.postValue(Event(false))
+                    }
                 }
-                else -> {
-                    // Do nothing
-                }
+            } catch (e: UnknownHostException) {
+                _loadingState.postValue(false)
+                _successState.postValue(Event(false))
+            } catch (e: Exception) {
+                _loadingState.postValue(false)
+                _successState.postValue(Event(false))
             }
         }
-    }
-
-    companion object {
-        private val TAG = StoryViewModel::class.java.simpleName
     }
 }

@@ -19,6 +19,7 @@ import space.iqbalsyafiq.storymedia.model.request.RegisterRequest
 import space.iqbalsyafiq.storymedia.repository.TokenPreferences
 import space.iqbalsyafiq.storymedia.repository.api.ApiConfig
 import space.iqbalsyafiq.storymedia.repository.api.ApiService
+import java.net.UnknownHostException
 
 class CredentialViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -31,7 +32,7 @@ class CredentialViewModel(application: Application) : AndroidViewModel(applicati
     private val pref = TokenPreferences.getInstance(application.dataStore)
 
     // init api
-    var service = ApiConfig.getApiService()
+    private var service = ApiConfig.getApiService()
 
     // live data
     private var _loadingState = MutableLiveData<Boolean>()
@@ -54,30 +55,34 @@ class CredentialViewModel(application: Application) : AndroidViewModel(applicati
         _loadingState.postValue(true)
         println("Hai")
 
-        val response = withContext(dispatcher) {
-            apiService.registerUser(requestBody)
+        try {
+            val response = withContext(dispatcher) {
+                apiService.registerUser(requestBody)
+            }
+
+            when (response.error as Boolean) {
+                true -> {
+                    _loadingState.postValue(false)
+                    _registerUserStatus.postValue(false)
+
+                }
+                false -> {
+                    _registerUserStatus.postValue(true)
+                    loginUser(
+                        LoginRequest(requestBody.email, requestBody.password),
+                        dispatcher,
+                        apiService
+                    )
+                }
+            }
+        } catch (e: UnknownHostException) {
+            _loadingState.postValue(false)
+            _registerUserStatus.postValue(false)
+        } catch (e: Exception) {
+            _loadingState.postValue(false)
+            _duplicateEmailStatus.postValue(true)
         }
 
-        println(response)
-
-        when {
-            response.error as Boolean -> {
-                _loadingState.value = false
-                _registerUserStatus.value = false
-            }
-            response.message?.contains("already") as Boolean -> {
-                _loadingState.value = false
-                _duplicateEmailStatus.value = true
-            }
-            else -> {
-                _registerUserStatus.value = true
-                loginUser(
-                    LoginRequest(requestBody.email, requestBody.password),
-                    dispatcher,
-                    apiService
-                )
-            }
-        }
     }
 
     suspend fun loginUser(
@@ -87,30 +92,38 @@ class CredentialViewModel(application: Application) : AndroidViewModel(applicati
     ) {
         _loadingState.value = true
 
-        val response = withContext(dispatcher) {
-            apiService.loginUser(requestBody)
-        }
-
-        when {
-            response.error as Boolean -> {
-                _loadingState.value = false
-                _loginUserStatus.value = false
+        try {
+            val response = withContext(dispatcher) {
+                apiService.loginUser(requestBody)
             }
-            else -> {
-                _loadingState.value = false
-                _loginUserStatus.value = true
 
-                viewModelScope.launch(dispatcher) {
-                    pref.savePreference(
-                        response.loginResult?.token ?: "",
-                        loginTokenKey
-                    )
-                    pref.savePreference(
-                        response.loginResult?.name ?: "",
-                        nameKey
-                    )
+            when (response.error as Boolean) {
+                true -> {
+                    _loadingState.value = false
+                    _loginUserStatus.value = false
+                }
+                false -> {
+                    _loadingState.value = false
+                    _loginUserStatus.value = true
+
+                    viewModelScope.launch(dispatcher) {
+                        pref.savePreference(
+                            response.loginResult?.token ?: "",
+                            loginTokenKey
+                        )
+                        pref.savePreference(
+                            response.loginResult?.name ?: "",
+                            nameKey
+                        )
+                    }
                 }
             }
+        } catch (e: UnknownHostException) {
+            _loadingState.value = false
+            _loginUserStatus.value = false
+        } catch (e: java.lang.Exception) {
+            _loadingState.value = false
+            _loginUserStatus.value = false
         }
     }
 
